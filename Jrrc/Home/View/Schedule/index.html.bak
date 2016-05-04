@@ -1,0 +1,32 @@
+
+
+<!-- 行程和记事 -->
+<div id='div_schedule'></div>
+
+<!-- 添加记事输入 -->
+<div id='div_input_schedule'></div>
+
+<!-- 添加记事输入 -->
+<div id='div_modify_schedule'></div>
+
+<script>
+	$(function() {
+		$.post('/Jrrc_web/Home/Schedule/createtable/uid/'+{$uid}+'/year/2015/month/5',
+				function(msg) {
+					$("#div_schedule").html(msg);
+
+			});
+
+	});
+	function addMeno() {
+
+		$("#div_input_schedule").html('');
+		//$("#div_input_schedule").dialog('close');
+		$("#div_input_schedule").on('dialogclose',function(){
+						$("#div_input_schedule").html('');
+					});
+		$.get('/Jrrc_web/Home/Schedule/showaddbox', function(msg) {
+			$("#div_input_schedule").html(msg);
+		});
+	};
+</script>

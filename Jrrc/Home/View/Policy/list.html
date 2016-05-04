@@ -1,0 +1,26 @@
+<table id=article_list colspan='3' width='100%'>
+
+	<tr>
+		<td height='25px' align=center >发文时间</td>
+		<td align=center >文件编号</td>
+		<td  align=center>文件标题</td>
+		<td  align=center>文件效力(0为有效，2为废止)</td>
+	</tr>
+
+	<volist name='list' id='vo' >
+	<tr height=15px>
+		
+		<td height='20px'>{$vo.d_issue_date|substr=0,10}</td>
+		<td align="center">{$vo.d_issue_num}</td>
+		<td><a charset=utf8 href='/Jrrc_web/Home/Policy/findbytitle/title/{$vo.d_title}' target='_blank'>{$vo.d_title}</a></td>
+		<td align="center">{$vo.d_state}</td>
+	</tr>
+	</volist>
+</table>
+
+<{$page}>
+<!--分页输出-->
+
+
+
+

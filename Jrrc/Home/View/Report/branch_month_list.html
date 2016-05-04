@@ -1,0 +1,128 @@
+<link rel="stylesheet" href="/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.css" />
+<script src='/Jrrc_web/Public/jquery/jquery.js'></script>
+<script src='/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.min.js'></script>
+
+
+<style>
+
+.t_border {
+	cellspacing: 0px, cellpadding:0px, border-collapse:collapse;
+	width:50%
+}
+
+.thead {
+	text-align: center;
+	background: #abcdef;
+}
+
+</style>
+</br>
+&nbsp;
+<img src='/jrrc_web/home/chart/branch_month_barplot?br_id={$br_id}&type={$type}&start={$start}&end={$end}&now={$now}'  alt=""  id='chart_month_list'/>
+&nbsp;
+<img src='/jrrc_web/home/chart/branch_type_pie?level={$level}&id={$br_id}&type={$type}&start={$start}&end={$end}&now={$now}'  alt=""  id='chart_month_list'/>
+</br>
+<div id='div_branch'  style='float:left;;margin:10px'>
+<table id='tb_client_report' class='t_border'   border=1>
+	<tr>
+		<td  class='thead'>一级行号</td>
+		<td  class='thead'>行名</td>
+		<td  class='thead'>月份</td>
+		<td  class='thead'>结算笔数</td>
+		<td  class='thead'>结算金额(美元)</td>
+
+	</tr>
+	<volist name='result' id='vo'>
+	<tr>
+		<td align="center">{$vo.p_id}</td>
+		<td align="center">{$vo.br_name|str_replace='本部','',###}</td>
+		<td align="center">{$vo.yw_month}</td>
+		<td align="center">{$vo.bishu}</td>
+		<td align="right">{$vo.totalamount|number_format=###,2}</td>
+
+	</tr>
+	</volist>
+
+</table>
+</div>
+<div id='div_type_report'  style='float:left;margin:10px'>
+<table id='tb_type_report' class='t_border'   border=1>
+	<tr>
+	
+		<td  class='thead'>业务种类</td>
+		<td  class='thead'>结算笔数</td>
+		<td  class='thead'>结算金额(美元)</td>
+
+	</tr>
+	<volist name='yw_type_result' id='vo'>
+	<tr>
+	
+		<td align="center">{$vo.yw_name}</td>
+		<td align="center">{$vo.bishu}</td>
+		<td align="right">{$vo.totalamount|number_format=###,2}</td>
+
+	</tr>
+	</volist>
+
+</table>
+</div>
+
+<script>
+$(function(){
+	
+$("#tb_type_report").css({
+	"width" : "550px",
+	"border" : "0px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse'
+});
+$("#tb_type_report td").css({
+	"border" : "1px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse',
+	'height' : '15px',
+	'font-size' : '12px'
+});
+
+
+$("#tb_type_report td").bind('mousemove', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "#cbadef";
+});
+$("#tb_type_report td").bind('mouseout', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "white";
+});
+
+
+$("#tb_client_report").css({
+	"width" : "500px",
+	"border" : "0px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse'
+});
+$("#tb_client_report td").css({
+	"border" : "1px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse',
+	'height' : '15px',
+	'font-size' : '12px'
+});
+
+
+$("#tb_client_report td").bind('mousemove', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "#cbadef";
+});
+$("#tb_client_report td").bind('mouseout', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "white";
+});
+
+});
+
+</script>

@@ -1,0 +1,85 @@
+
+<!--添加用户  -->
+<div align='left'>
+<table cols='3'>
+<tr >
+<td colspan="1">最近一天：</td>
+<td colspan="1">{$LastDay}</td>
+<td>&nbsp;</td>
+</tr>
+<tr >
+<td colspan="1">国际结算业务量：</td>
+<td colspan="1" align="right">{$js_amount|number_format=###,2}美元</td>
+<td>&nbsp;&nbsp;共{$js_count}笔。</td>
+</tr>
+<tr >
+<td colspan="1">贸易融资业务量：</td>
+<td colspan="1"align="right">{$tf_amount|number_format=###,2}美元</td>
+<td colspan="1">&nbsp;&nbsp;共{$tf_count}笔。</td>
+</tr>
+</table>
+
+</div>
+<br/>
+<!--业务流水  -->
+<div id="div_js_list" align="center" >
+	<table id="table_user_list" class='table'>
+		<tr style="color: blue; align: center; width: 100%">
+			<td class="align_center" colspan='6'>业务流水列表</td>
+		</tr>
+
+		<tr>
+			<td class='tableHeader align_center'>业务编号</td>
+			<td class='tableHeader align_center'>客户名称</td>
+			<td class='tableHeader align_center'>业务类型</td>
+			<td class='tableHeader align_center'>币种</td>
+			<td class='tableHeader align_center'>金额</td>
+			<td class='tableHeader align_center'>折美元金额</td>
+			
+		</tr>
+
+		<volist name='js_list' id='vo'>
+		<tr>
+			<td class='tableTd align_center'>{$vo.ywbh}</td>
+			<td class='tableTd align_center'>{$vo.name}</td>
+			<td class='tableTd align_center'>{$vo.yw_name}</td>
+			<td class='tableTd align_center'>{$vo.cny}</td>
+			<td class='tableTd align_right'>{$vo.txamt|number_format=###,2}</td>
+			<td class='tableTd align_right'>{$vo.usdamt|number_format=###,2}</td>		
+		</tr>
+		</volist>
+
+				<volist name='tf_list' id='vo'>
+		<tr>
+			<td class='tableTd align_center'>{$vo.ywbh}</td>
+			<td class='tableTd align_center'>{$vo.name}</td>
+			<td class='tableTd align_center'>{$vo.yw_name}</td>
+			<td class='tableTd align_center'>{$vo.cny}</td>
+			<td class='tableTd align_right'>{$vo.txamt|number_format=###,2}</td>
+			<td class='tableTd align_right'>{$vo.usdamt|number_format=###,2}</td>		
+		</tr>
+		</volist>
+	</table>
+
+</div>
+
+
+<script>
+$(function(){
+	$("#table_user_list td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_user_list td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+	
+	
+});
+
+
+</script>
+
+
+

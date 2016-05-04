@@ -1,0 +1,12 @@
+
+
+
+       <script type="text/javascript">
+ 7             function hello(){
+ 8                 var iframe = document.getElementById("iframe").contentWindow;
+ 9                 iframe.postMessage("hello, 这是主页面传过来的数据", "http://www.126.com");
+10             }
+11         </script>
+12   
+15         <iframe  src="http://www.126.com"  id="iframe"  width="100%" height="100%" frameborder="0" scrolling="no">
+16         </iframe>

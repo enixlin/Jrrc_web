@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>联系人查询</title>
+<link rel="stylesheet" href="/Jrrc_web/Public/jquery/jquery_ui/jquery-ui.css" />
+<script src='/Jrrc_web/Public/jquery/jquery.js'></script>
+<script src='/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.min.js'></script>
+</head>
+<body>
+	<div id='search'>
+		查询联系人
+		<form action="">
+			<p>
+				单位：<select name="company" id="company"></select>
+			</p>
+			<p>
+				部门：<select name="department" id="department"></select>
+			</p>
+			<p>
+				职务：<select name="position" id="position"></select>
+			</p>
+			<p>
+				姓名：<input type='text' name="name" id="name">
+			</p>
+			<p>
+				<input type="submit" id='search_submit' value='提交查询' />
+			</p>
+		</form>
+	</div>
+	<div id='add'>
+		新增联系人
+		<form action="">
+			<p>
+				单位：<input type="text" name='company' />
+			</p>
+			<p>
+				部门：<input type="text" name='company' />
+			</p>
+			<p>
+				职务：<input type="text" name='company' />
+			</p>
+			<p>
+				姓名：<input type="text" name='company' />
+			</p>
+			<p>
+				手机：<input type="text" name='cellphone' />
+			</p>
+			<p>
+				座机：<input type="text" name='phone' />
+			</p>
+			<p>
+				电邮：<input type="text" name='email' />
+			</p>
+			<p>
+				地址：<input type="text" name='address' />
+			</p>
+			<p>
+				<input type="submit" id='_submit' value='保存' />
+			</p>
+		</form>
+	</div>
+
+</body>
+</html>
+
+<script>
+$(function(){
+	$("#search").css({'width':'300px','background':'orange','float':'left','padding':'10px'});
+	$("#add").css({'width':'300px','background':'green','float':'left','padding':'10px'});
+	var postdata=$("form").serialize() ;
+	$.post('/Jrrc_web/Home/User/UserLogin/',postdata,function(){
+		
+	});
+});
+
+</script>

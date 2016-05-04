@@ -1,0 +1,114 @@
+<style>
+
+.t_border {
+	cellspacing: 0px, cellpadding:0px, border-collapse:collapse
+}
+
+.thead {
+	text-align: center;
+	background: #abcdef;
+}
+
+.client{
+   cursor:pointer
+}
+
+</style>
+
+
+
+<table id='tb_client_report' class='t_border'   border=1>
+	<tr>
+		<td  class='thead'>一级行号</td>
+		<td  class='thead'>二级行号</td>
+		<td  class='thead'>行名</td>
+		<td  class='thead'>客户名称</td>
+		<td  class='thead'>结算笔数</td>
+		<td  class='thead'>结算金额(美元)</td>
+		<td  class='thead'>结售汇笔数</td>
+		<td  class='thead'>结售汇金额(美元)</td>
+		<td  class='thead'>融资笔数</td>
+		<td  class='thead'>融资金额(美元)</td>
+	</tr>
+	<volist name='client_yw' id='vo'>
+	<tr>
+		<td align="center">{$vo.upbranch}</td>
+		<td align="center">{$vo.branch}</td>
+		<td align="center" >{$vo.br_name|str_replace='本部','',###}</td>
+		<td align="center" id='{$vo.custno}' class='client'  name='{$vo.name}' >{$vo.name}</td>
+		<td align="center">{$vo.js_times}</td>
+		<td align="right">{$vo.js_jiner|number_format=###,2}</td>
+		<td align="center">{$vo.jsh_times}</td>
+		<td align="right">{$vo.jsh_jiner|number_format=###,2}</td>
+		<td align="center">{$vo.tf_times}</td>
+		<td align="right">{$vo.tf_jiner|number_format=###,2}</td>
+	</tr>
+	</volist>
+<tr>
+<td colspan=4 align="center">合计</td>
+<td align="center">{$total.js_times_total}</td>
+<td align="right">{$total.js_jiner_total|number_format=###,2}</td>
+<td align="center">{$total.jsh_times_total}</td>
+<td align="right">{$total.jsh_jiner_total|number_format=###,2}</td>
+<td align="center">{$total.tf_times_total}</td>
+<td align="right">{$total.tf_jiner_total|number_format=###,2}</td>
+</tr>
+</table>
+
+
+
+<script>
+$(function(){
+	
+	$("#tb_client_report td").bind('click', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		var c_id=evg.id;
+		var url='/jrrc_web/home/report1/show_Client_Report_Month';
+		if(c_id!=''){	
+			var start=$("#start").val();
+			var end = $("#end").val();
+			//var name=document.getElementById(c_id);
+			//alert(evg.name);
+			
+			url=url+"/client_id/"+c_id;
+			url=url+"/start/"+start;
+			url=url+"/end/"+end;
+			url=url+"/type/01";
+			window.open(url,evg.id,"width=1200px,height=800px,top=50,left=60");
+			//$.post(url,{"c_id":c_id,"type":'01',"start":start,"end":end,},function(msg){
+			//	$("#div_report").html(msg);
+			//},"html");
+		}
+
+	});
+	
+	
+$("#tb_client_report").css({
+	"width" : "100%",
+	"border" : "0px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse'
+});
+$("#tb_client_report td").css({
+	"border" : "1px solid gray",
+	"cellspacing" : "0",
+	"cellpadding" : "0",
+	'border-collapse' : 'collapse',
+	'height' : '15px',
+	'font-size' : '12px'
+});
+
+
+$("#tb_client_report td").bind('mousemove', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "#cbadef";
+});
+$("#tb_client_report td").bind('mouseout', function(evgl) {
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	evg.parentNode.style.background = "white";
+});
+
+});
+
+</script>

@@ -1,0 +1,56 @@
+<?php
+
+namespace Home\Controller;
+
+use Common\Controller\AuthController;
+
+class CustomerController extends AuthController {
+	public function index() {
+		$Customer = M ( 'customer' );
+		$result = $Customer->distinct ( true )->field ( 'year' )->select ();
+		// dump($result);
+		$this->assign ( 'year', $result );
+		$this->display ( 'index' );
+	}
+	// 获取参数
+	public function getArgs() {
+		$condition = $_GET;
+		return $condition;
+	}
+	// 查询
+	public function search() {
+	 $this->searchHandle ( $this->getArgs () ) ;
+	}
+	// 处理查询
+	public function searchHandle($condition) {
+		$Customer = M ( 'customer' );
+		$map ['year'] = array (
+				'like',
+				"%" . $condition ['year'] . "%" 
+		);
+		$map ['company_name'] = array (
+				'like',
+				"%" . $condition ['company_name'] . "%" 
+		);
+		$count = $Customer->where ( $map )->count ();
+		$limitRows = 15;
+		$p = new \Org\Util\AjaxPage ( $count, $limitRows, "selectpage" );
+		$limit_value = $p->firstRow . "," . $p->listRows;
+		
+		$data = $Customer->where ( $map )->order ( 'year desc' )->limit ( $limit_value )->select (); // 查询数据
+		$page = $p->show (); // 产生分页信息，AJAX的连接在此处生成               
+		$this->assign ( 'list', $data );
+		$this->assign ( 'page', $page );
+		$this->display ( 'list' );
+	}
+	
+	
+	/**
+	 * 导入EXCEL文件
+	 */
+	public function importExcelFile(){
+		
+	}
+	
+	
+}

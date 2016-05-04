@@ -1,0 +1,144 @@
+<form action="" ，method='post' id='fm_modify'>
+	<table>
+	
+		<tr>
+			<td>编号 </td>
+			<td  >
+			<input type="text"  name='id' style='display:none' value={$result[0].id} />
+			<input type="text"  name='u_id' style='display:none' value={$result[0].u_id} />
+			{$result[0].id}</td>
+		</tr>
+		<tr>
+			<td>标题 </td>
+			<td><input type="text" name='title' value={$result[0].title} /></td>
+		</tr>
+		<tr>
+			<td>日期</td>
+			<td><input type="text" id='tb_date_modify' name='date' value={$result[0].date}  /></td>
+		</tr>
+		<tr>
+		
+		<if condition="$result[0]['is_public'] eq 0" >
+			<td>是否公开</td>
+			<td>
+			是<input type="radio" name='is_public' value='0' checked='checked' />
+			否<input type="radio" name="is_public" value='1' />
+			</td>
+		</if>
+		<if condition="$result[0]['is_public'] eq 1" >
+			<td>是否公开</td>
+			<td>
+			是<input  type="radio" name='is_public' value='0' />
+			否<input type="radio" name="is_public" value='1' checked='checked' />
+			</td>			
+		</if>
+		</tr>
+		<tr>
+		<if condition="$result[0]['level'] eq 0">
+			<td>重要</td>
+			<td>
+			是<input type="radio" name='level' value='0' checked='checked'/>
+			否<input type="radio" name='level' value='1' />
+			</td>
+		</if>
+		
+		<if condition="$result[0]['level'] eq 1">
+			<td>重要</td>
+			<td>
+			是<input type="radio" name='level' value='0' />
+			否<input type="radio" name='level' value='1' checked='checked' />
+			</td>
+		</if>
+		</tr>
+		<tr>
+			<td>记事内容</td>
+			<td><textarea rows='10' cols='30' name='content'  >{$result[0].content} </textarea></td>
+		</tr>
+		<tr>
+			<td align='center' colspan='2'>
+			<input type="button" value='删除记录' id='btn_delete' />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" value='保存修改' id='btn_modify' />
+			</td>
+		</tr>
+	</table>
+</form>
+
+
+
+<script>
+	$(function() {
+		
+		
+		//显示\格式化记事输入框
+		showModifyBox();
+		
+		
+		
+		$("#btn_modify").bind('click',function(){
+			var date=new Date();
+			var year=date.getFullYear();
+			var month=date.getMonth()+1;
+			
+			
+			var modifydata=null;
+			modifydata=$("#fm_modify").serialize();
+			 $.post('/Jrrc_web/Home/Schedule/modify',modifydata,function(msg){
+				 if('1'==msg){
+					 alert('修改成功');
+					 closeModifyBox();
+					$.post('/Jrrc_web/Home/Schedule/createtable/uid/'+{$result[0].u_id}+'/year/'+year+'/month/'+month,
+								function(msg) {
+								$("#div_schedule").html(msg);
+								}); 
+				 }else{
+					 alert('修改失败');
+				 }
+			 });
+		});
+		
+		$("#div_modify_schedule").on('dialogclose',function(){
+			$("form").html('');
+		});
+		
+		//提交删除
+		$("#btn_delete").bind('click',function(){						
+			if(confirm('确定要删除本条记录？？')){				
+			 $.post('/Jrrc_web/Home/Schedule/delete',{id:{$result[0].id}},function(msg){
+					
+				if("删除成功"==msg){
+					alert('删除记事成功');
+					closeModifyBox();
+					var date=new Date();
+					var year=date.getFullYear();
+					var month=date.getMonth()+1;
+					$.post('/Jrrc_web/Home/Schedule/createtable/uid/'+{$result[0].u_id}+'/year/'+year+'/month/'+month,
+							function(msg) {
+							$("#div_schedule").html(msg);
+							}); 		
+				}
+				else{
+					alert('删除记事失败');
+				}
+			}); 
+			};
+		});
+		
+		//显示\格式化记事输入框
+		function showModifyBox() {
+			$("#tb_date_modify").datepicker();
+			$("#div_modify_schedule").dialog({
+				"width" : '500px',
+				"title" : '修改记事'
+			});
+		};
+		
+		//关闭修改输入框
+		function closeModifyBox(){
+			$("#div_modify_schedule").dialog('close');
+			$("form:reset");
+			//$("#div_modify_schedule").dialog('destroy');
+		}
+	
+	});
+</script>

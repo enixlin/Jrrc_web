@@ -1,0 +1,135 @@
+<form action="" id='form_add'>
+	<table width="100%" id="table_add">
+		<tr>
+			<td width='100%' id='table_head' colspan="2"><strong>添加通信录</strong></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">姓名</td>
+			<td align="left" width="80%"><input width='80%' type="text"
+				style="border: 2px solid orange" id="name" name="name" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">公司</td>
+			<td align="left" width="80%"><select 
+				id="select_company">
+					<option value=""></option>
+					<volist name='companylist' id='vo'>
+					<option value={$vo.department}>{$vo.department}</option>
+					</volist>
+			</select>&nbsp; &nbsp; 添加新建公司名&nbsp; <input type="checkbox" id='createnewcompany' /> <input
+				width='80%' type="text" style="border: 2px solid orange"
+				id="input_company"  disabled='disabled' /></td>
+
+		</tr>
+		<tr>
+			<td align="right" width="20%">部门</td>
+			<td align="left" width="80%"><input width='80%' type="text"
+				style="border: 2px solid orange" width='80%' id="sub_department"
+				name="sub_department" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">职务</td>
+			<td align="left" width="80%"><input width='80%' type="text"
+				style="border: 2px solid orange" id="position" name="position" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">手机号码</td>
+			<td align="left" width="80%"><input width='80%' width='80%'
+				style="border: 2px solid orange" type="text" id="cell_phone"
+				name="cell_phone" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">座机</td>
+			<td align="left" width="80%"><input width='80%' type="text"
+				style="border: 2px solid orange" id="office_phone"
+				name="office_phone" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">电子邮箱</td>
+			<td align="left" width="80%"><input width='200px' type="text"
+				style="border: 2px solid orange" id="email" name="email" /></td>
+		</tr>
+		<tr>
+			<td align="right" width="20%">地址</td>
+			<td align="left" width="80%"><input width='200px' type="text"
+				style="border: 2px solid orange" id="address" name="address" /></td>
+		</tr>
+		<tr>
+			<td colspan="2" align='center'><input type="button" value='保存'
+				style="border: 2px solid gray" id='btn_save' /></td>
+		</tr>
+
+	</table>
+</form>
+
+<script>
+	$(function() {
+
+		$("#select_company").css({
+			"width" : "160px",
+			"border" : "2px solid orange"
+		});
+
+		$("#table_head").css({
+			"background-Image" : "url(/jrrc_web/Public/res/tab_bg.gif)",
+			"color" : "orange",
+			"text-align" : "center",
+			"height" : "25px",
+		});
+		$("#table_add").css({
+			"border" : "1px solid gray",
+		});
+		$("input").css({
+			"height" : "25px",
+			"vertical-align" : "middle"
+		});
+		$("#table_add td").css({
+			"padding" : "2px",
+		});
+
+		$("#btn_save").css({
+			"height" : "30px",
+			"width" : "100px",
+			"border" : "2px solid orange",
+			"font-size" : "20px",
+			"color" : "gray"
+		});
+		
+		$("#createnewcompany").bind('click',function(){
+			if($('#createnewcompany').is(':checked')) {
+				$("#select_company").attr("disabled","disabled");
+				$("#input_company").removeAttr("disabled");
+			}else{
+				$("#select_company").removeAttr("disabled");
+				$("#input_company").attr("disabled","disabled");
+			}
+				
+		});
+
+		
+		
+		$("#btn_save").bind('click', function() {
+			var data='';
+			var data = $("#form_add").serialize();
+			if($('#createnewcompany').is(':checked')) {
+				data=data+"&department="+$("#input_company").val();
+			}else{
+				data=data+"&department="+$("#select_company").val();
+			}
+
+			$.post('/Jrrc_web/Home/PhoneBook/addc', data, function(msg) {
+				if ("0" != msg) {
+					if (confirm('添加成功，是否继续？')) {
+
+					} else {
+						$("#form_add").reset();
+					}
+				}
+			});
+		});
+
+	});
+</script>

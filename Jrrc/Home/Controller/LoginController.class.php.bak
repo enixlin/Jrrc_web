@@ -1,0 +1,53 @@
+<?php
+namespace Home\Controller;
+
+use Think\Controller;
+
+class LoginController extends Controller {
+	public function index() {
+		echo session ( 'name' );
+		if (session ( 'name' ) != null) {
+			$this->redirect ( '/Home/Main/Index' );
+		} else {
+			$this->display ( 'index' );
+		}
+	}
+	
+	// 取得所有的用户名
+	public function getAllUser() {
+		$User = M ( 'User' );
+		$UserList = $User->field ( 'name' )->select ();
+		echo json_encode ( $UserList );
+	}
+	
+	// 用户登录处理
+	public function login() {
+		$User = D ( 'User' );
+		$Userlist = $User->relation ( true )->select ();
+		$flag = 'false';
+		foreach ( $Userlist as $v ) {
+			if ($v ['name'] == I ( 'name' ) && $v ['password'] == I ( 'password' )) {
+				// 保存用户名到session
+				session ( 'name', I ( 'name' ) );
+				session('uid',$v['id']);
+				// 保存用权限到session
+				//session ( 'auth', $v ['auth_group'] [0] ['title'] );
+				
+				$flag = 'true';
+			}
+		}
+		
+		if ($flag == 'true') {
+			echo 'true';
+		} else {
+			echo 'false';
+		}
+	}
+	
+	
+	// 用户登出处理
+	public function logout(){
+		session(null);
+		$this->success('退出成功',"/Jrrc_web/Home/Index");
+	}
+}

@@ -1,0 +1,82 @@
+<style>
+.br {
+	cursor: pointer
+}
+
+.center {
+	text-align: center
+}
+
+.blue_background {
+	background: #7C99E2
+}
+</style>
+
+
+<table id="task_list">
+	<tr>
+		<td style="background: #7c99e2" class='br, center'>ID</td>
+		<td style="background: #7c99e2" class='br, center'>种类编号</td>
+		<td style="background: #7c99e2" class='br, center'>任务名称</td>
+		<td style="background: #7c99e2" class='br, center'>操作</td>
+	</tr>
+
+	<volist name="result" id="vo">
+	<tr>
+		<td class='br, center'>{$vo.zb_id}</td>
+
+		<td class='br, center'>{$vo.zb_type}</td>
+
+		<td class='br, center'>{$vo.zb_name}</td>
+
+		<td id={$vo.zb_id} class='br center'>删除</td>
+	</tr>
+
+	</volist>
+
+	</tr>
+
+
+</table>
+
+
+<script>
+	$(function() {
+
+		$("#task_list").css({
+			"width" : "100%",
+			"border" : "0px solid gray",
+			"cellspacing" : "0",
+			"cellpadding" : "0",
+			'border-collapse' : 'collapse'
+		});
+		$("#task_list td").css({
+			"border" : "1px solid gray",
+			"cellspacing" : "0",
+			"cellpadding" : "0",
+			'border-collapse' : 'collapse'
+		});
+
+		$("#task_list td").bind('mousemove', function(evgl) {
+			var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+			evg.parentNode.style.background = "#cbadef";
+		});
+		$("#task_list td").bind('mouseout', function(evgl) {
+			var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+			evg.parentNode.style.background = "white";
+		});
+
+		$("td").bind(
+				'click',
+				function(evgl) {
+					var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+					if (evg.id != "") {
+						$.get('/Jrrc_web/Home/Rate/delete_task_type/zb_type/'
+								+ evg.id, function(msg) {
+
+						});
+					}
+				});
+
+	});
+</script>

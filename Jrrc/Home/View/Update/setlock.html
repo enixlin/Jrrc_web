@@ -1,0 +1,33 @@
+<form action="" id='fm_date'>
+
+
+	起始日：<input type="text" name="lockDate_start" /></br>
+	结束日：<input type="text" name="lockDate_end" /></br>
+	<input type="button"  value='加锁' id='btn_lock' />
+	<input type="button"  value='解锁' id='btn_unlock' />
+	
+</form>
+
+
+<script>
+	$(function(){
+		$("#btn_lock").bind('click',function(){
+			var date=$("#fm_date").serialize();
+			$.post('/jrrc_web/home/update/lockRecord',date,function(msg){
+				alert('成功加锁数据：'+msg.info+'条。');
+			});
+		});
+	});
+	
+	$(function(){
+		$("#btn_unlock").bind('click',function(){
+			var date=$("#fm_date").serialize();
+			$.post('/jrrc_web/home/update/unlockRecord',date,function(msg){
+				alert('共解锁数据：'+msg.info+'条。');
+			});
+		});
+	});
+
+
+
+</script>

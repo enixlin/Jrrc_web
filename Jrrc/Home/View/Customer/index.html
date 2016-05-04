@@ -1,0 +1,112 @@
+
+
+<div id='div_condition'>
+	<form action="" id='form_condition'>
+		<table colspan='2' width="100%">
+			<tr>
+				<td width='10%' align="left">年份 <select name="year"
+					id="select_year">
+						<option value=""></option>
+						<volist name='year' id="vo">
+						<option value="{$vo.year}">{$vo.year}</option>
+						</volist>
+				</select> 企业名称： <input type="text" name="company_name" id="company_name" />
+					<input type="button" id="btn_submit" value="提交查询" />
+				</td>
+
+			</tr>
+
+		</table>
+	</form>
+	<hr>
+</div>
+
+<div id="div_list" width='100%' heigth='100%'>*****************
+	查询企业海关进出口数据! &nbsp;&nbsp;&nbsp; 数据更新至2015年12月 *****************
+	<img width='100%' height='480px' src="/jrrc_web/public/res/bg/9.jpg" alt="" />
+	
+	</div>
+
+
+<script>
+
+	$(function() {
+		//////////////////////////////////
+		//
+		//提交查询函数
+		//
+		//////////////////////////////////
+		function submit(){
+			var data = $("#form_condition").serialize() + "&p=0";
+			$.get('/Jrrc_web/Home/Customer/search', data, function(msg) {
+				$("#div_list").html(msg);
+				//格式化表格
+				$("#table_list").css({
+					"width" : "100%",
+					"border" : "0px solid gray",
+					"cellspacing" : "0",
+					"cellpadding" : "0",
+					'border-collapse' : 'collapse'
+				});
+				$("#table_list td").css({
+					"border" : "1px solid gray",
+					"cellspacing" : "0",
+					"cellpadding" : "0",
+					'border-collapse' : 'collapse'
+				});
+
+				$("#div_list").css({
+					"width" : "100%",
+					"height" : "100%",
+					"overflow" : "auto",
+					"padding" : "1px",
+				});
+				$("#table_list td").bind('mousemove', function(evgl) {
+					var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+					evg.parentNode.style.background = "#cbadef";
+				});
+				$("#table_list td").bind('mouseout', function(evgl) {
+					var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+					evg.parentNode.style.background = "white";
+				});
+			});//$.get
+		};
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+		//格式化查询条件
+		$("#btn_submit").button();
+		$("input").css({
+			'border' : "2px solid #abcdef",
+			'height' : '25px',
+			'verticalAlign' : 'middle'
+		});
+		$("select").css({
+			'border' : "2px solid #abcdef",
+			'height' : '25px',
+			'width' : '90px',
+			'verticalAlign' : 'middle'
+		});
+
+		$("#btn_submit").css({
+			'height' : '30px'
+		});
+
+		/////////////////////////////////////////////////////////
+		//
+		//
+		//绑定查询条件变动事件
+		//
+		/////////////////////////////////////////////////////////
+		$("#btn_submit").bind('click', function(e) {
+			submit();
+		});//btn_submit click
+		$("#company_name").bind('input propertychange', function() {
+			submit();
+		});	
+		$("#select_year").bind('select propertychange', function() {
+			submit();
+		});
+		
+		////////////////////////////////////////////////////////////////////
+	});//function end
+</script>

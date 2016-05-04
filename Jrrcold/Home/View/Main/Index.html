@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>主功能菜单</title>
+<link rel="stylesheet" href="/Jrrc_web/Public/jquery/jquery_ui/jquery-ui.css" />
+<script src='/Jrrc_web/Public/jquery/jquery.js'></script>
+<script src='/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.min.js'></script>
+</head>
+<body>
+	<div id="contern">
+		<div id="head">head</div>
+		<div id="left">left
+		<div id="menu">
+				<h1>通信录</h1>
+			  <div>
+			    <p>通信录</p>
+			  </div>
+				<h1>业绩数据</h1>
+			  <div>
+			    <p>业绩数据</p>
+			  </div>
+				<h1>政策文件</h1>
+			  <div>
+			    <p>政策文件</p>
+			  </div>
+				<h1>海关数据</h1>
+			  <div>
+			    <p>海关数据</p>
+			  </div>
+		</div>
+		
+		</div>
+		<div id="right"></div>
+		<div id="footer"></div>
+	</div>
+</body>
+</html>
+<script>
+$(function(){
+
+	$("#head").css({'width':'300px','border':'1px solid orange'});
+	$("#head").button();
+	$("#menu").accordion().css({"width":"200px"});
+	//$("#menu").css({"width":"300px"});
+	$("#head").css({"width":"1200px"});
+});
+</script>

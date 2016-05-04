@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网站后台管理</title>
+<link rel="stylesheet"
+	href="/Jrrc_web/Public/jquery/jquery_ui/jquery-ui.css" />
+<script src='/Jrrc_web/Public/jquery/jquery.js'></script>
+<script src='/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.min.js'></script>
+</head>
+<body>
+	<div id="content">
+		<div id='head'>
+			<table width="100%">
+				<tr>
+					<td width="70%" align="center">
+						<div align='center'
+							style="font-size: 35px; margin: 5px; color: orange">融和农商银行国际业务部后台管理</div>
+					</td>
+					<td width="30%" align="right">
+						<div style="color: gray">
+							欢迎你：{$name} <a href="/Jrrc_web/Admin/Login/logout/"> 退出</a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id='main'>
+			<div id="left">
+				<p align="center" style="color: orange">
+					<strong>功能菜单</strong>
+				</p>
+				<div id="menu">
+					<h3>权限管理</h3>
+					<div id='useradmin'>
+						<ul>
+							<li id='adduser'>增加用户</li>
+							</br>
+							<li id='UserList'>用户维护</li>
+							</br>
+							<li id="addRole">增加角色</li>
+						</ul>
+
+					</div>
+					<h3>权限管理</h3>
+					<div>Second content panel</div>
+				</div>
+
+			</div>
+			<div id="bar" style="color: white">隐藏菜单</div>
+			<div id="right">right</div>
+		</div>
+		<div id="footer">footer</div>
+	</div>
+</body>
+</html>
+
+<script>
+	$(function() {
+
+		/*  */
+		/*
+		格式化页面布局
+		 */
+		/*  */
+		$("#content").css({
+			"border" : "3px solid gray",
+			"height" : "612px"
+		});
+
+		$("#head").css({
+			"width" : "100%",
+			"height" : "60px",
+			"background" : "white",
+			"border" : "1px solid gray",
+
+		});
+		$("#left").css({
+			"width" : "15%",
+			"height" : "500px",
+			"background" : "gray",
+			"float" : "left"
+		});
+		$("#bar").css({
+			"width" : "1.5%",
+			"height" : "500px",
+			"background" : "gray",
+			"float" : "left"
+		});
+		$("#right").css({
+			"width" : "83.5%",
+			"height" : "500px",
+			"background" : "#fff",
+			"float" : "left"
+		});
+		$("#footer").css({
+			"width" : "100%",
+			"height" : "50px",
+			"background" : "orange",
+			"float" : "left",
+			"border" : "1px solid gray",
+		});
+
+	});
+	/*
+	格式化功能导航
+	 */
+	$("#menu").accordion().css({
+		"width" : "98%",
+		"height" : "500px",
+		"margin" : "20px 0px 0px 1px"
+	});
+	$("#menu").accordion("option", "heightStyle", "fill");
+	
+	$(function() {
+		$("#menu").bind('click',function(event){	
+			var obj=event.srcElement ? event.srcElement : event.target;
+			//alert(obj.id);
+		});
+	});
+
+	$("#adduser").bind('click', function() {
+		$.get('/Jrrc_web/Admin/Rbac/showAddUser/', function(message) {
+			
+
+			$("#right").html(message);
+
+		});
+	});
+
+	$("#UserList").bind('click', function() {
+		$.get('/Jrrc_web/Admin/Rbac/UserList/', function(message) {
+			$("#right").html(message);
+
+		});
+	});
+
+	/*
+	左则功能菜单折叠
+	 */
+	$(function() {
+		var folder = 1;
+		$("#bar").bind('click', function() {
+			if (folder == 1) {
+				$("#left").css({
+					"width" : "0%"
+				});
+				$("#left").fadeOut();
+				$("#bar").text("显示菜单").css({
+					"color" : "white"
+				});
+				$("#bar").css({
+					"width" : "1.5%",
+					"vertical-align" : "middle"
+				});
+				$("#right").css({
+					"width" : "98.5%"
+				});
+			} else {
+				$("#left").css({
+					"width" : "15%"
+				});
+				$("#left").fadeIn();
+				$("#bar").text("隐藏菜单").css({
+					"color" : "white"
+				});
+				$("#bar").css({
+					"width" : "1.5%"
+				});
+				$("#right").css({
+					"width" : "83.5%"
+				});
+			}
+			folder = -1 * folder;
+		});
+	});
+
+	$(function() {
+		$("#addUserForm").dialog("open");
+	})
+</script>

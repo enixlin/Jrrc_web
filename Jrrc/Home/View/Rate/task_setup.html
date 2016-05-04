@@ -1,0 +1,42 @@
+
+<!-- 设置选择任务种类及数据 -->
+<div style="background:#f10000" height="100px" >
+	<form id="fm_task_type" name="fm_task_type">
+		<select name="zb_type" id="task_type"  >
+			<volist name="result" id="vo">
+			<option value={$vo.zb_type}>任务类型 {$vo.zb_type}--{$vo.zb_name}</option>
+			</volist>
+		</select> 
+		<input type='button' value="任务种类设置" id="add" />
+		<input type='button' value="保存" id="save" />
+	</form>
+	<input type="hidden" height="120px"/>
+</div>
+<br/>
+
+
+<!-- 按钮事件 -->
+<div name='table_list' id='table_list' >
+</div >
+
+
+<script>
+
+		$("#save").bind('click', function() {
+			var data = $("#fm_task_type").serialize() + "&p=0";
+			$.post('/Jrrc_web/Home/Rate/show_task_list',data,function(msg){
+				$("#table_list").html(msg);
+			});
+		});
+
+		$("#add").bind('click', function() {
+			//var data = $("#fm_task_type").serialize() + "&p=0";
+			$.get('/Jrrc_web/Home/Rate/show_add_task',function(msg){
+				$("#table_list").html(msg);
+			});
+		});
+
+
+
+
+</script>

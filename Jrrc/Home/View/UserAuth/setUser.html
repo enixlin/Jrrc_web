@@ -1,0 +1,108 @@
+<style>
+.t_border {
+	cellspacing: 0px;
+	cellpadding: 0px;
+	border-collapse: collapse
+}
+
+.thead {
+	text-align: center;
+	background: #abcdef;
+	border: 1px
+}
+
+.client {
+	cursor: pointer
+}
+</style>
+
+<div id='div_add_user' align='center'>
+	<form action="" id='fm_addUser'>
+		<table id='tb_user' class='t_border' border='1'>
+			<tr>
+				<td class='thead'></td>
+				<td class='thead'>添加新用户</td>
+			</tr>
+
+			<tr>
+				<td align='right'>用户名</td>
+				<td align='center'><input type="text" name='name' /></td>
+			</tr>
+			<tr>
+				<td align='right'>密码</td>
+				<td align='center'><input type="text" name='password' /></td>
+			</tr>
+			<tr>
+				<td align='right'>用户类型</td>
+				<td align='left'><select name="status" id="user_type"
+					width='100%'>
+						<volist name='type' id='vo'>
+						<option value="{$vo.id}">{$vo.title}</option>
+						</volist>
+				</select></td>
+			</tr>
+			<tr>
+				<td colspan='2'><input type="button" value='保存' id='btn_save' /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<hr>
+<br/>
+<div id='div_user_list' width='100%'>
+	<table width='100%' id='tb_user_list' class='table t_border' border="1">
+		<tr>
+			<td class='thead'>id</td>
+			<td class='thead'>用户名</td>
+			<td class='thead'>用户状态</td>
+			<td class='thead' colspan='2'>编辑</td>
+		</tr>
+
+		<volist name='userlist' id='vo'>
+		<tr>
+			<td>{$vo.id}</td>
+			<td>{$vo.name}</td>
+			<td>{$vo.status}</td>
+			<td align='center'>
+				<select name="Status" id="Status">
+					<option value='1'>启用</option>
+					<option value='0'>停用</option>
+				</select>
+			</td>
+			<td id='{$vo.id}'>删除</td>
+		</tr>
+		</volist>
+
+	</table>
+
+</div>
+
+<script>
+	$(function() {
+		$("#btn_save").bind(
+				'click',
+				function() {
+					var date = $("#fm_addUser").serialize();
+					$.post('/Jrrc_web/home/UserAuth/handlerAddUser', date,
+							function(msg) {
+								alert(msg);
+							});
+				});
+
+		$("td").bind('click', function(evgl) {
+			var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+			var id = evg.id;
+			var Status = $('#Status').val();
+			alert(id);
+			if (id != '') {
+				$.post('/Jrrc_web/home/UserAuth/setUserStatus', {
+					'id' : id,
+					'Status' : Status
+				}, function(msg) {
+					
+				});
+			}
+		});
+
+	});
+</script>

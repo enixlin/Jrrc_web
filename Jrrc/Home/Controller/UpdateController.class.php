@@ -32,6 +32,8 @@ class UpdateController extends Controller {
 					$table_location = 'jrrc_location';
 					$balance = '../Jrrc_web/Public/data/fc_balance_avg.dat';
 					$table_balance = 'jrrc_cx_avg_current';
+					$tf="../Jrrc_web/Public/data/iss_filetf10.dat";
+					$table_tf="jrrc_tf";
 					
 					$updatecount = 0;
 					$import_flag = 0;
@@ -65,6 +67,15 @@ class UpdateController extends Controller {
 					} else {
 						echo "更新失败</br>";
 					}
+					
+					if ($updatecount = $this->importdata ( $tf, $table_tf, $connect )) {
+						echo "更新贸易融资表成功：共" . $updatecount . "条记录</br>";
+						$updatecount = 0;
+						$import_flag ++;
+					} else {
+						echo "更新失败</br>";
+					}
+					
 					$date=str_replace ( "/", '', $this->getftpfiledate () );
 					if($updatecount =$this->updateChunKuan($date-2)){
 						echo "更新外币各项存款日均数据成功，共新增数据：".$updatecount."条记录 </br>";
@@ -76,7 +87,7 @@ class UpdateController extends Controller {
 					echo $import_flag;
 					
 					// 更新数据库
-					if ($import_flag != 4) {
+					if ($import_flag != 5) {
 						$this->redirect ( '/Home/Update/updateerror' );
 					} else {
 						// 所有临时表写入后，开如补充流水中的经营单位信息
@@ -234,22 +245,31 @@ class UpdateController extends Controller {
 		$local_file_cxrj = '../Jrrc_web/Public/data/fc_balance_avg.dat';
 		$local_file_cxrj_bakcup = '../Jrrc_web/Public/data/backup' . $backup_dir_date . '/fc_balance_avg.dat';
 		
+		//贸易融资
+		$remote_file_tf=$remote_directory.'iss_filetf10.dat';
+		$local_file_tf="../Jrrc_web/Public/data/iss_filetf10.dat";
+		$local_file_tf_bakcup = '../Jrrc_web/Public/data/backup' . $backup_dir_date . '/iss_filetf10.dat';
+		
 		// 文件读写句柄
 		$handle_ywls = fopen ( $local_file_ywls, 'w' );
 		$handle_jg = fopen ( $local_file_jg, 'w' );
 		$handle_kusd = fopen ( $local_file_kusd, 'w' );
 		$handle_cxrj = fopen ( $local_file_cxrj, 'w' );
+		$handle_tf = fopen ( $local_file_tf, 'w' );
 		// 备份文件读写句柄
 		$handle_ywls_backup = fopen ( $local_file_ywls_backup, 'w' );
 		$handle_jg_backup = fopen ( $local_file_jg_backup, 'w' );
 		$handle_kusd_backup = fopen ( $local_file_kusd_backup, 'w' );
 		$handle_cxrj_backup = fopen ( $local_file_cxrj_bakcup, 'w' );
+		$handle_tf_backup = fopen ( $local_file_tf_bakcup, 'w' );
 		
 		// 文件下载成功标志
 		$flag_ywls = null;
 		$flag_jg = null;
 		$flag_kusd = null;
 		$flag_cxrj = null;
+		$flag_tf = null;
+		
 		
 		// try to download $remote_file and save it to $handle
 		if (ftp_fget ( $conn_id, $handle_ywls, $remote_file_ywls, FTP_ASCII, 0 )) {
@@ -284,6 +304,14 @@ class UpdateController extends Controller {
 			echo "【存款信息表】下载失败   </br>";
 			$flag_cxrj = 0;
 		}
+		if (ftp_fget ( $conn_id, $handle_tf, $remote_file_tf, FTP_ASCII, 0 )) {
+			ftp_fget ( $conn_id, $handle_tf_backup, $remote_file_tf, FTP_ASCII, 0 );
+			echo "【贸易融资流水表】成功下载   </br>";
+			$flag_tf = 1;
+		} else {
+			echo "【贸易融资流水表】下载失败   </br>";
+			$flag_tf = 0;
+		}
 		
 		// 关闭ftp连接
 		ftp_close ( $conn_id );
@@ -291,14 +319,16 @@ class UpdateController extends Controller {
 		fclose ( $handle_jg );
 		fclose ( $handle_kusd );
 		fclose ( $handle_cxrj );
+		fclose ( $handle_tf );
 		
 		fclose ( $handle_ywls_backup );
 		fclose ( $handle_jg_backup );
 		fclose ( $handle_kusd_backup );
 		fclose ( $handle_cxrj_backup );
+		fclose ( $handle_tf_backup );
 		
 		// 返回执行结果
-		if ($flag_jg == 1 && $flag_kusd == 1 && $flag_ywls == 1 && $flag_cxrj == 1) {
+		if ($flag_jg == 1 && $flag_kusd == 1 && $flag_ywls == 1 && $flag_cxrj == 1&& $flag_tf==1) {
 			return 1;
 		} else {
 			return 0;
@@ -360,7 +390,7 @@ class UpdateController extends Controller {
 			}
 			$string = substr ( $string, 0, - 1 );
 			mysql_query ( $string, $connect );
-			// echo $string;
+			 //echo $string;
 			if (! feof ( $handle )) {
 				echo "Error: unexpected fgets() fail\n";
 			}

@@ -17,15 +17,94 @@
 <td colspan="1"align="right">{$tf_amount|number_format=###,2}美元</td>
 <td colspan="1">&nbsp;&nbsp;共{$tf_count}笔。</td>
 </tr>
+
+
+<tr >
+<td colspan="1">贸易融资余额：</td>
+<td colspan="1"align="right">{$tf_balance|number_format=###,2}美元</td>
+</tr>
+
+
 </table>
 
 </div>
 <br/>
 <!--业务流水  -->
 <div id="div_js_list" align="center" >
+
+<table id="table_tf_remind_list" class='table'>
+		<tr style="color: blue; align: center; width: 100%">
+			<td class="align_center" colspan='8'>未来15天贸易融资业务到期提醒表</td>
+		</tr>
+
+		<tr>
+			<td class='tableHeader align_center'>借据编号</td>
+			<td class='tableHeader align_center'>客户名称</td>
+			<td class='tableHeader align_center'>币种</td>
+			<td class='tableHeader align_center'>融资金额</td>
+			<td class='tableHeader align_center'>利率(%)</td>
+			<td class='tableHeader align_center'>借款日</td>
+			<td class='tableHeader align_center'>到期日</td>
+			<td class='tableHeader align_center'>本金余额</td>
+					
+		</tr>
+
+		<volist name='tf_next15day_detail' id='vo'>
+		<tr>
+			<td class='tableTd align_center'>{$vo.contract_number}</td>
+			<td class='tableTd align_center'>{$vo.client_name}</td>
+			<td class='tableTd align_center'>{$vo.currency}</td>
+			<td class='tableTd align_center'>{$vo.tf_amount|number_format=###,2}</td>
+			<td class='tableTd align_center'>{$vo.rate}</td>
+			<td class='tableTd align_center'>{$vo.v_date}</td>
+			<td class='tableTd align_center'>{$vo.r_date}</td>
+			<td class='tableTd align_center'>{$vo.remain_amount|number_format=###,2}</td>
+
+			
+		</tr>
+		</volist>
+
+	
+	</table>
+
+
+
+
+<br/>
+
+
+<table id="table_tf_balance_list" class='table'>
+		<tr style="color: blue; align: center; width: 100%">
+			<td class="align_center" colspan='6'>贸易融资余额分户明细表</td>
+		</tr>
+
+		<tr>
+			<td class='tableHeader align_center'>客户编号</td>
+			<td class='tableHeader align_center'>客户名称</td>
+			<td class='tableHeader align_center'>折美元金额</td>
+			
+		</tr>
+
+		<volist name='tf_client_balance' id='vo'>
+		<tr>
+			<td class='tableTd align_center'>{$vo.client_number}</td>
+			<td class='tableTd align_center'>{$vo.client_name}</td>
+			<td class='tableTd align_right'>{$vo.sum|number_format=###,2}</td>
+			
+		</tr>
+		</volist>
+
+	
+	</table>
+
+
+<br/>
+
+
+
 	<table id="table_user_list" class='table'>
 		<tr style="color: blue; align: center; width: 100%">
-			<td class="align_center" colspan='6'>业务流水列表</td>
+			<td class="align_center" colspan='6'>{$LastDay}业务流水列表</td>
 		</tr>
 
 		<tr>
@@ -71,6 +150,26 @@ $(function(){
 		evg.parentNode.style.background = "#cbadef";
 	});
 	$("#table_user_list td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+	
+	
+	$("#table_tf_balance_list td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_tf_balance_list td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+	
+	
+	$("#table_tf_remind_list td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_tf_remind_list td").bind('mouseout', function(evgl) {
 		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
 		evg.parentNode.style.background = "white";
 	});

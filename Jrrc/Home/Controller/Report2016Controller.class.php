@@ -413,8 +413,18 @@ class Report2016Controller extends Controller {
 	// 显示机构业务量任务表
 	public function show_Unit_Report($start, $end) {
 		$report = $this->Unit_Report ( $start, $end );
-		$date_cxrj =M("waibichunkuan_avg")->field("TJRQ")->limit(1)->find();
-		//echo $date_cxrj=$date_cxrj1['TJRQ'];
+		// 如果查询的日期在存款日均表中有记录的，
+		$isexist = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->where ( 'TJRQ=' . $end )->limit ( 1 )->find ();
+		// dump($isexist);
+		if ($isexist == null) {
+			$chunkuanday = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->order ( 'TJRQ desc' )->limit ( 1 )->find ();
+			//echo " noe exist";
+		} else {
+			$chunkuanday = $isexist;
+			//echo "isexist";
+		}
+		$date_cxrj = $chunkuanday;
+		// echo $date_cxrj=$date_cxrj1['TJRQ'];
 		// 计算支行合计
 		$branch_sum = array ();
 		$department_sum = array ();
@@ -501,12 +511,12 @@ class Report2016Controller extends Controller {
 		$total ['amount_js_season_sum_private'] = $branch_sum ['amount_js_season_sum_private'] + $department_sum ['amount_js_season_sum_private'];
 		$total ['amount_js_season_sum_company'] = $branch_sum ['amount_js_season_sum_company'] + $department_sum ['amount_js_season_sum_company'];
 		$total ['amount_jsh_season_sum'] = $branch_sum ['amount_jsh_season_sum'] + $department_sum ['amount_jsh_season_sum'];
-		
+		// dump($chunkuanday);
 		$this->assign ( "branch_sum", $branch_sum );
 		$this->assign ( "department_sum", $department_sum );
 		$this->assign ( "total", $total );
 		$this->assign ( "report", $report );
-		$this->assign ( 'date_cxrj', $date_cxrj );
+		$this->assign ( 'date_cxrj', $chunkuanday );
 		$this->display ( 'show_unit_report' );
 	}
 	
@@ -802,10 +812,18 @@ class Report2016Controller extends Controller {
 		$startday = $year . $season ['startmonthday'];
 		$endday = $year . $season ['endmonthday'];
 		
-		$chunkuanday=M("waibichunkuan_avg")->field("TJRQ")->limit(1)->find();
-		//如果查询的日期在存款日均表中有记录的，
-// 		$isexit=M("waibichunkuan_avg")->("TJRQ")->where("")
-		//echo "$chunkuanday".$chunkuanday['TJRQ'];
+		// 如果查询的日期与存款日均表已中有记录相同的，则取查询日期的，否则取最新的存款记录日期
+		$isexist = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->where ( 'TJRQ=' . $end )->limit ( 1 )->find ();
+		// dump($isexist);
+		if ($isexist == null) {
+			$chunkuanday = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->order ( 'TJRQ desc' )->limit ( 1 )->find ();
+			//echo " noe exist";
+		} else {
+			$chunkuanday = $isexist;
+			//echo "isexist";
+		}
+		// $isexit=M("waibichunkuan_avg")->("TJRQ")->where("")
+		// echo "$chunkuanday".$chunkuanday['TJRQ'];
 		$Report = array (
 				array () 
 		);
@@ -827,8 +845,8 @@ class Report2016Controller extends Controller {
 			$amount_client = $this->get_unit_client ( $v ['br_id'], $start, $end, '1' );
 			$cx = $this->get_unit_cx ( $v ['br_id'] );
 			$amount_cx = $cx [0] ['c_rj'] - $cx [0] ['b_rj'];
-			$amount_waibirijun=$this->get_unit_chunkuan_avg($v ['br_id'], $chunkuanday["TJRQ"]);
-			//$amount_waibirijun=$this->get_unit_chunkuan_avg($v ['br_id'], $end);
+			$amount_waibirijun = $this->get_unit_chunkuan_avg ( $v ['br_id'], $chunkuanday ["TJRQ"] );
+			// $amount_waibirijun=$this->get_unit_chunkuan_avg($v ['br_id'], $end);
 			// 取得本季业绩
 			// $season_amount_js = $this->get_unit_js ( $v ['br_id'], $startday, $endday, '01' );
 			$season_amount_js_private = $this->get_unit_js_type ( $v ['br_id'], $startday, $endday, '2' );
@@ -852,7 +870,7 @@ class Report2016Controller extends Controller {
 			$Report [$key] ['amount_js_company'] = $amount_js_company / 10000;
 			$Report [$key] ['amount_jsh'] = $amount_jsh / 10000;
 			$Report [$key] ['amount_client'] = $amount_client;
-			//$Report [$key] ['amount_cx'] = $amount_cx / 10000;
+			// $Report [$key] ['amount_cx'] = $amount_cx / 10000;
 			$Report [$key] ['amount_cx'] = $amount_waibirijun;
 			
 			// 写入完成率
@@ -861,7 +879,7 @@ class Report2016Controller extends Controller {
 			$Report [$key] ['js_company_complete_rate'] = $amount_js_company / 10000 / $task_amount_js_company * 100;
 			$Report [$key] ['jsh_complete_rate'] = $amount_jsh / 10000 / $task_amount_jsh * 100;
 			$Report [$key] ['client_complete_rate'] = $amount_client / $task_amount_client * 100;
-			$Report [$key] ['cx_complete_rate'] =  $amount_waibirijun / $task_amount_cx * 100;
+			$Report [$key] ['cx_complete_rate'] = $amount_waibirijun / $task_amount_cx * 100;
 			
 			// 写入季度业绩
 			$Report [$key] ['season_amount_js'] = $season_amount_js / 10000;
@@ -873,17 +891,12 @@ class Report2016Controller extends Controller {
 		// dump($Report);
 		return $Report;
 	}
-	
-	
-	public function UpdateClietnLocation($result_client){
-		
-		foreach ($result_client as $r){
-			
+	public function UpdateClietnLocation($result_client) {
+		foreach ( $result_client as $r ) {
 		}
 		
-		return  $result_client_update;
+		return $result_client_update;
 	}
-	
 	
 	/**
 	 * 生成客户业务量报表数据数组
@@ -898,7 +911,6 @@ class Report2016Controller extends Controller {
 		 * 这里有一个小问题，如果客户调整了所属的经营单位或支行，将一直还是以最早的归属地显示
 		 * 所以在搜索所有的客户信息后，再查询属地表，更新客户属地
 		 */
-		
 		$model_m = D ( 'Ywlsfixed' );
 		$condition_m ['er_type'] = '1';
 		
@@ -906,11 +918,11 @@ class Report2016Controller extends Controller {
 		
 		$result_client_m = $model_m->field ( 'upbranch,  branch ,custno,name' )->relation ( true )->where ( $condition_m )->group ( 'custno' )->order ( $order )->select ();
 		// dump ( $result_client );
-		//$result_client=$this->UpdateClietnLocation($result_client_m);
-		$result_client=$result_client_m;
+		// $result_client=$this->UpdateClietnLocation($result_client_m);
+		$result_client = $result_client_m;
 		
 		$model = D ( 'Ywlsfixed' );
-		// 由于国际结算量和结售汇量的统计规则不一致，所以要分开查询然后合并客户数组		
+		// 由于国际结算量和结售汇量的统计规则不一致，所以要分开查询然后合并客户数组
 		// 查询所有国际结算业务
 		$condition ['type'] = '01';
 		$condition ['yw_date'] = array (
@@ -1027,7 +1039,7 @@ class Report2016Controller extends Controller {
 			}
 		}
 		
-		 //dump($result_client);
+		// dump($result_client);
 		return $result_client;
 	}
 	
@@ -1055,20 +1067,17 @@ class Report2016Controller extends Controller {
 		// dump($result);
 	}
 	
-	
-	
 	/**
 	 * 取得所有机构的各项存款
 	 */
 	public function get_unit_chunkuan_avg($unit, $date) {
-		$model=M('waibichunkuan_avg');
-		$condition['JGDH']=$unit;
-		$condition['TJRQ']=$date;
-		$result=$model->where($condition)->select();
-		//dump($result);
-		return $result[0]['total_create'];
+		$model = M ( 'waibichunkuan_avg' );
+		$condition ['JGDH'] = $unit;
+		$condition ['TJRQ'] = $date;
+		$result = $model->where ( $condition )->select ();
+		// dump($result);
+		return $result [0] ['total_create'];
 	}
-	
 	
 	/**
 	 * 取得所有的业务清单
@@ -1198,17 +1207,23 @@ class Report2016Controller extends Controller {
 	public function get_unit_client($unit, $start, $end, $client_type) {
 		// 2016年使用权用亲的考核口径,是客户数净增
 		// 所以要先计算出上一年的客户数
-		$model=M('ywls_fixed');
 		$model = M ( 'ywls_fixed' );
-		$lastYear=substr($end,0,4)-1;
-		$lastYearStart=$lastYear."0101";
-		$lastYearEnd=$lastYear.substr($end,4,8);
-		$condition1['yw_date']=array(
-				array('egt',$lastYearStart),
-				array('elt',$lastYearEnd),
+		$model = M ( 'ywls_fixed' );
+		$lastYear = substr ( $end, 0, 4 ) - 1;
+		$lastYearStart = $lastYear . "0101";
+		$lastYearEnd = $lastYear . substr ( $end, 4, 8 );
+		$condition1 ['yw_date'] = array (
+				array (
+						'egt',
+						$lastYearStart 
+				),
+				array (
+						'elt',
+						$lastYearEnd 
+				) 
 		);
-		$condition1['upbranch']=$unit;
-		$condition1['er_type']=$client_type;
+		$condition1 ['upbranch'] = $unit;
+		$condition1 ['er_type'] = $client_type;
 		
 		$condition ['upbranch'] = $unit;
 		$condition ['er_type'] = $client_type;
@@ -1224,8 +1239,8 @@ class Report2016Controller extends Controller {
 		);
 		$result1 = $model->where ( $condition )->count ( 'distinct custno' );
 		$result2 = $model->where ( $condition1 )->count ( 'distinct custno' );
-		//dump($lastYearEnd);
-		return $result1-$result2;
+		// dump($lastYearEnd);
+		return $result1 - $result2;
 	}
 	
 	/**

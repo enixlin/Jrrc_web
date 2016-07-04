@@ -61,7 +61,7 @@ $(function(){
 	$("#tb_client_report td").bind('click', function(evgl) {
 		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
 		var c_id=evg.id;
-		var url='/jrrc_web/home/report1/show_Client_Report_Month';
+		var url='/jrrc_web/home/report2016/show_Client_Report_Month';
 		if(c_id!=''){	
 			var start=$("#start").val();
 			var end = $("#end").val();

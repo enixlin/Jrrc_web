@@ -85,6 +85,13 @@ class UserAuthController extends AuthController {
 	}
 	
 	
+	/**
+	 * 取得用户权限列表
+	 */
+	public function ListUserAuth($id){
+		$model=M("user");
+		$result=$model->relation(true)->where()->select();
+	}
 }
 
 	

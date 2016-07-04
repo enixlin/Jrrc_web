@@ -418,10 +418,10 @@ class Report2016Controller extends Controller {
 		// dump($isexist);
 		if ($isexist == null) {
 			$chunkuanday = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->order ( 'TJRQ desc' )->limit ( 1 )->find ();
-			//echo " noe exist";
+			// echo " noe exist";
 		} else {
 			$chunkuanday = $isexist;
-			//echo "isexist";
+			// echo "isexist";
 		}
 		$date_cxrj = $chunkuanday;
 		// echo $date_cxrj=$date_cxrj1['TJRQ'];
@@ -588,16 +588,26 @@ class Report2016Controller extends Controller {
 	// 生成机构业务量分月柱状图
 	public function Unit_Barplot($unit, $start, $end, $type) {
 		$result = $this->get_unit_js_monthlist ( $unit, $start, $end, $type );
-		
-		// dump($result);
+		$start_compare = "" . (substr ( $start, 0, 4 ) - 1) . substr ( $start, 4, 4 );
+		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );
+		$result_compare = $this->get_unit_js_monthlist ( $unit, $start_compare, $end_compare, $type );
 		$unit_name = M ( 'struction' )->field ( 'br_name' )->where ( 'br_id=' . $unit )->limit ( 1 )->select ();
 		$title = str_replace ( '本部', '', $unit_name [0] ['br_name'] );
 		$title = $title . "：国际结算量分月明细图";
 		$time = array (); // 时间轴，横轴
-		$amount = array (); // 业务量，纵轴
+		$amount1 = array (); // 业务量，纵轴
+		$amount2 = array (); // 业务量，纵轴
 		foreach ( $result as $v ) {
 			array_push ( $time, $v ['month'] );
-			array_push ( $amount, $v ['jiner'] / 10000 );
+			array_push ( $amount1, $v ['jiner'] / 10000 );
+		}
+		
+		foreach ( $result_compare as $v ) {
+			if ($v ['jiner'] == 0) {
+				array_push ( $amount2, 0 );
+			} else {
+				array_push ( $amount2, $v ['jiner'] / 10000 );
+			}
 		}
 		
 		$yw_type = '';
@@ -611,7 +621,7 @@ class Report2016Controller extends Controller {
 			$yw_type = '贸易融资量';
 		}
 		
-		$this->barplot ( $title, $yw_type, $time, $amount );
+		$this->barplot ( $title, $yw_type, $time, $amount1, $amount2 );
 	}
 	
 	// 生成客户业务量分类饼图
@@ -628,7 +638,9 @@ class Report2016Controller extends Controller {
 		$this->pie ( $title, $yw_type, $amount );
 	}
 	
-	// 生成客户业务量分月柱状图
+	/**
+	 * 生成客户业务量分月柱状图
+	 */
 	public function Client_Barplot($client_id, $start, $end, $type) {
 		$result = $this->get_client_js_monthlist ( $client_id, $start, $end, $type );
 		
@@ -655,6 +667,52 @@ class Report2016Controller extends Controller {
 		}
 		
 		$this->barplot ( $title, $yw_type, $time, $amount );
+	}
+	
+	/**
+	 * 生成客户结算量分月明细及同比柱状图
+	 */
+	public function Client_Barplot_compare($client_id, $start, $end, $type) {
+		$result = $this->get_client_js_monthlist ( $client_id, $start, $end, $type );
+		$start_compare = "" . (substr ( $start, 0, 4 ) - 1) . substr ( $start, 4, 4 );
+		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );
+		
+		$result_compare = $this->get_client_js_monthlist ( $client_id, $start_compare, $end_compare, $type );
+		
+		$client_name = M ( 'ywls_fixed' )->field ( 'name' )->where ( 'custno=' . $client_id )->limit ( 1 )->select ();
+		$title = str_replace ( '本部', '', $client_name [0] ['name'] );
+		$title = $title . "：分月明细图";
+		$time = array (); // 时间轴，横轴
+		$amount1 = array (); // 业务量，纵轴
+		$amount2 = array (); // 业务量，纵轴
+		foreach ( $result as $v ) {
+			array_push ( $time, $v ['month'] );
+			array_push ( $amount1, $v ['jiner'] / 10000 );
+		}
+		
+		foreach ( $result_compare as $v ) {
+			if ($v ['jiner'] == 0) {
+				array_push ( $amount2, 0 );
+			} else {
+				array_push ( $amount2, $v ['jiner'] / 10000 );
+			}
+		}
+		
+		$yw_type = '';
+		if ($type == '01') {
+			$yw_type = '国际结算量';
+		}
+		if ($type == '02') {
+			$yw_type = '结售汇量';
+		}
+		if ($type == '03') {
+			$yw_type = '贸易融资量';
+		}
+		// dump($start_compare);
+		// dump($end_compare);
+		// dump($amount1);
+		// dump($amount2);
+		$this->barplot ( $title, $yw_type, $time, $amount1, $amount2 );
 	}
 	
 	// 生成全行业务量分类饼图
@@ -687,14 +745,14 @@ class Report2016Controller extends Controller {
 	}
 	
 	/*
-	 * 函数名称：	barplot() 	绘画：柱状图
+	 * 函数名称： barplot() 绘画：柱状图
 	 * 参数：
-	 * $info 		图的名称，横轴和坚轴的名称
+	 * $info 图的名称，横轴和坚轴的名称
 	 * $deriction 柱状图的方向
 	 * $size 图片的大小
 	 * $data 数据
 	 */
-	public function barplot($title, $yw_type, $time, $amount) {
+	public function barplot($title, $yw_type, $time, $amount1, $amount2) {
 		
 		// Create the graph. These two calls are always required
 		$graph = new \Graph ( 500, 280, 'auto' );
@@ -720,23 +778,43 @@ class Report2016Controller extends Controller {
 		$graph->yaxis->HideTicks ( false, false );
 		
 		// Create the bar plots
-		$b1plot = new \BarPlot ( $amount );
+		// 以每一个数据组生成一个柱状图
+		$b1plot = new \BarPlot ( $amount1 );   //当期的数据
+		$b2plot = new \BarPlot ( $amount2 );   //去年同期的数据
 		
+		// 标指说明
 		$b1plot->SetLegend ( iconv ( 'utf-8', 'gb2312', $yw_type ) );
+		$b2plot->SetLegend ( iconv ( 'utf-8', 'gb2312', $yw_type . "(去年同期)" ) );
 		$graph->SetMargin ( '50', '20', '30', '70' );
 		$graph->legend->Pos ( 0.5, 0.99, "center", "bottom" );
 		
 		$graph->legend->SetFont ( FF_SIMSUN, FS_NORMAL, 9 );
 		
 		// ...and add it to the graPH
-		$graph->Add ( $b1plot );
+		// Create the grouped bar plot
+		// 创建柱状图组
+		$gbplot = new \GroupBarPlot ( array (
+				$b1plot,
+				$b2plot 
+		) );
+		// ...and add it to the graPH
+		$graph->Add ( $gbplot );
+		// $graph->Add ( $b1plot );
 		
+		// 柱状图的边框着色
 		$b1plot->SetColor ( "white" );
+		$b2plot->SetColor ( "white" );
+		// 柱状图的填充色
 		$b1plot->SetFillColor ( "green" );
+		$b2plot->SetFillColor ( "gray" );
 		$b1plot->SetValuePos ( 'top' );
+		$b2plot->SetValuePos ( 'top' );
 		$b1plot->value->SetFont ( FF_SIMSUN, FS_NORMAL, 9 );
+		$b2plot->value->SetFont ( FF_SIMSUN, FS_NORMAL, 9 );
 		$b1plot->value->SetFormat ( '%01.1f' );
+		$b2plot->value->SetFormat ( '%01.1f' );
 		$b1plot->value->show ();
+		$b2plot->value->show ();
 		
 		$graph->title->Set ( iconv ( 'utf-8', 'GBK', $title ) );
 		$graph->subtitle->Set ( iconv ( 'utf-8', 'gb2312', "(单位：万美元)" ) );
@@ -748,9 +826,9 @@ class Report2016Controller extends Controller {
 	}
 	
 	/*
-	 * 函数名称：	pie() 	绘画：饼图
+	 * 函数名称： pie() 绘画：饼图
 	 * 参数：
-	 * $info 		图的名称，横轴和坚轴的名称
+	 * $info 图的名称，横轴和坚轴的名称
 	 * $deriction 柱状图的方向
 	 * $size 图片的大小
 	 * $data 数据
@@ -817,10 +895,10 @@ class Report2016Controller extends Controller {
 		// dump($isexist);
 		if ($isexist == null) {
 			$chunkuanday = M ( "waibichunkuan_avg" )->field ( "TJRQ" )->order ( 'TJRQ desc' )->limit ( 1 )->find ();
-			//echo " noe exist";
+			// echo " noe exist";
 		} else {
 			$chunkuanday = $isexist;
-			//echo "isexist";
+			// echo "isexist";
 		}
 		// $isexit=M("waibichunkuan_avg")->("TJRQ")->where("")
 		// echo "$chunkuanday".$chunkuanday['TJRQ'];

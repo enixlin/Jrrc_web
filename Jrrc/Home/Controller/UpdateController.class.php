@@ -12,12 +12,14 @@ class UpdateController extends Controller {
 	public function update() {
 		// 比较日期，如果需要就更新数据库
 		if (! $this->comparedate ()) {
+		//if (false) {
 			// 无需更新数据
 			echo "</br>";
 			echo "数据已为最新，无需更新！";
 		} else {
 			// 下载文件
 			if ($this->getftpfile ()) {
+			//if (1) {
 				echo "文件下载成功</br>";
 				// 打开数据库连接
 				if (! $connect = $this->connectdatabase ()) {
@@ -165,6 +167,7 @@ class UpdateController extends Controller {
 		curl_close ( $ch );
 		
 		$json = json_decode ( $response );
+		//dump($json);
 		
 		//如果返回的记录数为0，则代表没有当天的数据
 		if ($json->total = 0) {
@@ -189,6 +192,7 @@ class UpdateController extends Controller {
 				$result=$model->add($condition);
 				$addrowcount++;				
 			}
+			//dump($addrowcount);
 			return $addrowcount;
 		}
 	}
@@ -412,7 +416,7 @@ class UpdateController extends Controller {
 		return $result [0] ['data_date'];
 	}
 	
-	/*
+	/**
 	 *
 	 *
 	 * ftp获取数据流水文件的日期
@@ -427,19 +431,23 @@ class UpdateController extends Controller {
 		
 		// 连接
 		$conn_id = ftp_connect ( $ftp_server );
+		//dump($conn_id);
 		// 登录
 		$login_result = ftp_login ( $conn_id, $ftp_user_name, $ftp_user_password );
+		//dump( $login_result);
 		
 		// 获取目录下所有的文件夹
 		$dir = ftp_nlist ( $conn_id, "/" );
-		
+		//$dir = ftp_rawlist ( $conn_id, "/" );
+		//dump($dir[0]);
 		// path to remote file
 		// 远程和本地文件夹定义
 		$remote_directory = $dir [count ( $dir ) - 1] . "/";
+		//echo "romote dir:".$remote_directory;
 		return $remote_directory;
 	}
 	
-	/*
+	/**
 	 *
 	 * 比较ftp数据文件日期与数据库更新记录
 	 *
@@ -459,7 +467,7 @@ class UpdateController extends Controller {
 		}
 	}
 	
-	/*
+	/**
 	 * 将客户属地表补充一级、二级支行的行号
 	 *
 	 */

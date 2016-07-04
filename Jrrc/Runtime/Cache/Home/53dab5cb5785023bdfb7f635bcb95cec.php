@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<?php if (!defined('THINK_PATH')) exit();?>﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -17,7 +17,7 @@
 	<div id='formdiv' class='text_center border'>
 		<form action="" method='post'>
 			<span><img class='logosiza_big' id='bg'
-				src="/Jrrc_web/Public/res/Logo_orange.png" alt="" /></span> <br /> <br />
+				src="/Jrrc_web/Public/res/Logo_blue.png" alt="" /></span> <br /> <br />
 			<span>用户：<select id='s_name' name='name'
 				class='textbox_length_middle text_center'></select></span> <br /> <br />
 			<span>密码：<input type="password" name='password'
@@ -40,7 +40,7 @@
 
 <script>
 	$(function() {
-		$("#formdiv").css({"width":"420px","border":"3px double orange","textAlign":"center","margin":"10px auto auto auto","padding":"15px"});
+		$("#formdiv").css({"width":"420px","border":"3px double #fedcba","textAlign":"center","margin":"10px auto auto auto","padding":"15px"});
 		$("#bg").css({"width":"400px"});
 		//$("#s_name").button();
 	$("#tb_password").button();

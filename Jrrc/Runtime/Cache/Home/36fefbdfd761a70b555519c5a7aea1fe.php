@@ -19,7 +19,7 @@
 </style>
 </br>
 &nbsp;
-<img src='/jrrc_web/home/Report1/All_Barplot/start/<?php echo ($start); ?>/end/<?php echo ($end); ?>'  alt=""  id='chart_month_list'/>
+<img src='/jrrc_web/home/Report2016/All_Barplot/start/<?php echo ($start); ?>/end/<?php echo ($end); ?>'  alt=""  id='chart_month_list'/>
 &nbsp;
 <img src='/jrrc_web/home/Report1/All_Type_Pie/start/<?php echo ($start); ?>/end/<?php echo ($end); ?>'  alt=""  id='chart_month_list'/>
 </br>

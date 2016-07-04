@@ -731,17 +731,28 @@ class Report2016Controller extends Controller {
 	
 	// 生成全行业务量分月柱状图
 	public function All_Barplot($start, $end) {
-		$result = $this->get_All_Report_Month ( $start, $end );
+		$result = $this->get_All_Report_Month ( $start, $end );		
+		$start_compare = "" . (substr ( $start, 0, 4 ) - 1) . substr ( $start, 4, 4 );
+		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );		
+		$result_compare = $this->get_All_Report_Month ( $start_compare, $end_compare );
+		
 		$title = "全行国际结算量分月明细图";
 		$time = array (); // 时间轴，横轴
-		$amount = array (); // 业务量，纵轴
+		$amount1 = array (); // 业务量，纵轴
+		$amount2 = array (); // 业务量，纵轴
 		foreach ( $result as $v ) {
 			array_push ( $time, $v ['month'] );
-			array_push ( $amount, $v ['jiner'] / 10000 );
+			array_push ( $amount1, $v ['jiner'] / 10000 );
+		}		
+		foreach ( $result_compare as $v ) {
+			if ($v ['jiner'] == 0) {
+				array_push ( $amount2, 0 );
+			} else {
+				array_push ( $amount2, $v ['jiner'] / 10000 );
+			}
 		}
-		$yw_type = '国际结算量';
-		
-		$this->barplot ( $title, $yw_type, $time, $amount );
+		$yw_type = '国际结算量';		
+		$this->barplot ( $title, $yw_type, $time, $amount1,$amount2 );
 	}
 	
 	/*

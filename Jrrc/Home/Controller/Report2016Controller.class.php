@@ -542,21 +542,73 @@ class Report2016Controller extends Controller {
 	// 显示对公客户业务量表
 	public function show_Client_Report($start, $end) {
 		$result = $this->Client_Report ( $start, $end );
+		$start_compare = "" . (substr ( $start, 0, 4 ) - 1) . substr ( $start, 4, 4 );
+		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );
+		$result_compare = $this->Client_Report ( $start_compare, $end_compare );
+		
+		//dump($result);
+		
+		
+		
+		
 		$js_times_total = null;
 		$js_jiner_total = null;
 		$jsh_times_total = null;
 		$jsh_jiner_total = null;
 		$tf_times_total = null;
 		$tf_jiner_total = null;
+		
+		$js_times_total_compare = null;
+		$js_jiner_total_compare = null;
+		$jsh_times_total_compare = null;
+		$jsh_jiner_total_compare = null;
+		$tf_times_total_compare = null;
+		$tf_jiner_total_compare = null;
+		
 		// dump($result);
-		foreach ( $result as $r ) {
+		foreach ( $result as $key=>$r ) {
+
+			foreach($result_compare as $rc){
+				if(strcmp($r['name'],$rc['name'])==0){
+				 $result[$key]['jsh_times_compare']=$rc['jsh_times'];
+				 $result[$key]['jsh_jiner_compare']=$rc['jsh_jiner'];
+				 $result[$key]['js_times_compare']=$rc['js_times'];
+				 $result[$key]['js_jiner_compare']=$rc['js_jiner'];
+				 $result[$key]['tf_times_compare']=$rc['tf_times'];
+				 $result[$key]['tf_jiner_compare']=$rc['tf_jiner'];
+				}
+			}
+			
 			$js_times_total = $js_times_total + $r ['js_times'];
 			$js_jiner_total = $js_jiner_total + $r ['js_jiner'];
 			$jsh_times_total = $jsh_times_total + $r ['jsh_times'];
 			$jsh_jiner_total = $jsh_jiner_total + $r ['jsh_jiner'];
 			$tf_times_total = $tf_times_total + $r ['tf_times'];
 			$tf_jiner_total = $tf_jiner_total + $r ['tf_jiner'];
+				
 		}
+		
+		
+		//计算$result的记录总数
+		//$count=array_count_values($result);
+			
+		foreach ( $result_compare as $key=>$rc ) {
+		 	$flag=0;
+			foreach($result as $r){
+				if(strcmp($r['name'],$rc['name'])!=0){
+					$flag=1;
+				}
+			}
+							
+			if($flag==0){
+				array_push($result, $rc);
+			}
+		
+		}
+		
+dump($result);
+		
+		
 		$total = array (
 				'js_times_total' => $js_times_total,
 				'js_jiner_total' => $js_jiner_total,
@@ -822,8 +874,8 @@ class Report2016Controller extends Controller {
 		$b2plot->SetValuePos ( 'top' );
 		$b1plot->value->SetFont ( FF_SIMSUN, FS_NORMAL, 9 );
 		$b2plot->value->SetFont ( FF_SIMSUN, FS_NORMAL, 9 );
-		$b1plot->value->SetFormat ( '%01.1f' );
-		$b2plot->value->SetFormat ( '%01.1f' );
+		$b1plot->value->SetFormat ( '%0.1f' );
+		$b2plot->value->SetFormat ( '%0.1f' );
 		$b1plot->value->show ();
 		$b2plot->value->show ();
 		
@@ -1109,7 +1161,7 @@ class Report2016Controller extends Controller {
 					$flag_js = 1;
 				}
 			}
-			
+			//如果三项业务都没有，则把这个客户从数组中剔除
 			if ($flag_js == 0 && $flag_jsh == 0 && $flag_tf == 0) {
 				unset ( $result_client [$key] );
 				continue;

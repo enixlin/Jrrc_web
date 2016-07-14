@@ -657,7 +657,47 @@ class Report2016Controller extends Controller {
 				'tf_times_total' => $tf_times_total,
 				'tf_jiner_total' => $tf_jiner_total 
 		);
-		// dump($total);
+		
+		//根据排序参数进行排序
+		// 取得列的列表
+		foreach ($result as $key => $row)
+		{
+			$js_jiner[$key]  = $row['js_jiner'];
+			$js_jiner_tongbi[$key]  = $row['js_jiner_tongbi'];
+			
+			$jsh_jiner[$key]  = $row['jsh_jiner'];
+			$jsh_jiner_tongbi[$key]  = $row['jsh_jiner_tongbi'];
+			
+			$tf_jiner[$key]  = $row['tf_jiner'];
+			$tf_jiner_tongbi[$key]  = $row['tf_jiner_tongbi'];
+			
+		}
+			
+		if(I("post.sorttype")==1){
+			
+		}
+		if(I("post.sorttype")==2){
+			array_multisort($js_jiner, SORT_DESC,$result);
+		}
+		if(I("post.sorttype")==3){
+			array_multisort($js_jiner_tongbi, SORT_DESC,$result);
+		}
+		if(I("post.sorttype")==4){
+			array_multisort($jsh_jiner, SORT_DESC,$result);
+		}
+		if(I("post.sorttype")==5){
+			array_multisort($jsh_jiner_tongbi, SORT_DESC,$result);
+		}
+		if(I("post.sorttype")==6){
+			array_multisort($tf_jiner, SORT_DESC,$result);
+		}
+		if(I("post.sorttype")==7){
+			array_multisort($tf_jiner_tongbi, SORT_DESC,$result);
+		}
+		
+		
+		
+		
 		$this->assign ( "client_yw", $result );
 		$this->assign ( "total", $total );
 		$this->display ( 'show_client_report' );

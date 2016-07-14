@@ -14,25 +14,25 @@
 }
 
 </style>
-<!--  
+
 <br/>
 <div style="background:#fedcba">
 &nbsp;&nbsp;&nbsp;
-	<select >
-			<option>支行汇总排序</option>	
-			<option>结算量排序</option>	
-			<option>结算量增幅排序</option>	
-			<option>结售汇量排序</option>	
-			<option>结售汇增幅排序</option>	
-			<option>贸易融资量排序</option>	
-			<option>贸易融资量增幅排序</option>	
+	<select id="sortselect"  onchange="showselect()">
+			<option value=1>支行汇总排序</option>	
+			<option value=2>结算量排序（降序）</option>	
+			<option value=3>结算量增幅排序（降序）</option>	
+			<option value=4>结售汇量排序（降序）</option>	
+			<option value=5>结售汇增幅排序（降序）</option>	
+			<option value=6>贸易融资量排序（降序）</option>	
+			<option value=7>贸易融资量增幅排序（降序）</option>	
 	
 	</select>
 
 </div>
 <br/>
 
--->
+
 <table id='tb_client_report' class='t_border'   border=1>
 	<tr>
 		<td  class='thead'>一级行号</td>
@@ -112,6 +112,20 @@
 
 
 <script>
+
+function showselect(){
+	var htm="<div width='100%' align='center'></br></br></br></br></br></br>正在查询，请稍候。。。<img align='center'  src='/jrrc_web/public/res/progress.gif'  /></div>";
+	$("#tb_client_report").html(htm);
+	$("#sorttype").val($("#sortselect").val());
+	var url='/Jrrc_web/home/report2016/show_Client_Report';
+	var data=$("#fm_condition").serialize();
+	//alert(data);
+	$.post(url,data,function(msg){
+		$("#div_report").html(msg);
+		$("#sortselect").val($("#sorttype").val());
+	});
+}
+
 $(function(){
 	
 	$("#tb_client_report td").bind('click', function(evgl) {
@@ -152,6 +166,8 @@ $("#tb_client_report td").css({
 	'height' : '15px',
 	'font-size' : '12px'
 });
+
+
 
 
 $("#tb_client_report td").bind('mousemove', function(evgl) {

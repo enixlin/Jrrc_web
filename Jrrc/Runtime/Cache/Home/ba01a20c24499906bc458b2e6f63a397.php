@@ -27,10 +27,11 @@
 <option value="4">客户首笔业务发生日期</option>
  </select>
 起始日：<input type="text"  name='start'   id='start'   />
-结束日：<input type="text"  name='end'  id ='end' />
+结束日：<input type="text"  name='end'  id ='end'       />
 &nbsp;【日期格式】：20150101
-<input type="button"  id='btn_submit' value='查询'/>
-<input type="button"  id='btn_export' value='导出EXCEL'/>
+<input type="button"  id='btn_submit' value='查询'      />
+<input type='hidden' value='1' id="sorttype"  name="sorttype"    />
+<input type="button"  id='btn_export' value='导出EXCEL' />
 </form>
 </div>
 

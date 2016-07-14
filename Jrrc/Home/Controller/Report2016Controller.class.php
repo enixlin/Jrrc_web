@@ -564,7 +564,7 @@ class Report2016Controller extends Controller {
 		
 		// dump($result);
 		foreach ( $result as $key => $r ) {
-			$ff=0;
+			$ff = 0;
 			foreach ( $result_compare as $rc ) {
 				
 				if (strcmp ( $r ['name'], $rc ['name'] ) == 0) {
@@ -574,25 +574,23 @@ class Report2016Controller extends Controller {
 					$result [$key] ['js_jiner_compare'] = $rc ['js_jiner'];
 					$result [$key] ['tf_times_compare'] = $rc ['tf_times'];
 					$result [$key] ['tf_jiner_compare'] = $rc ['tf_jiner'];
-					$ff=1;
+					
+				
+					
+					$ff = 1;
 				}
-// 				else{
-// 					$result [$key] ['jsh_times_compare'] = 0;
-// 					$result [$key] ['jsh_jiner_compare'] = 0;
-// 					$result [$key] ['js_times_compare'] = 0;
-// 					$result [$key] ['js_jiner_compare'] = 0;
-// 					$result [$key] ['tf_times_compare'] = 0;
-// 					$result [$key] ['tf_jiner_compare'] = 0;
-// 				}
+	
 			}
 			
-			if($ff==0){
-									$result [$key] ['jsh_times_compare'] = 0;
-									$result [$key] ['jsh_jiner_compare'] = 0;
-									$result [$key] ['js_times_compare'] = 0;
-									$result [$key] ['js_jiner_compare'] = 0;
-									$result [$key] ['tf_times_compare'] = 0;
-									$result [$key] ['tf_jiner_compare'] = 0;
+			if ($ff == 0) {
+				$result [$key] ['jsh_times_compare'] = 0;
+				$result [$key] ['jsh_jiner_compare'] = 0;
+				$result [$key] ['js_times_compare'] = 0;
+				$result [$key] ['js_jiner_compare'] = 0;
+				$result [$key] ['tf_times_compare'] = 0;
+				$result [$key] ['tf_jiner_compare'] = 0;
+				
+			
 			}
 			
 			$js_times_total = $js_times_total + $r ['js_times'];
@@ -601,6 +599,8 @@ class Report2016Controller extends Controller {
 			$jsh_jiner_total = $jsh_jiner_total + $r ['jsh_jiner'];
 			$tf_times_total = $tf_times_total + $r ['tf_times'];
 			$tf_jiner_total = $tf_jiner_total + $r ['tf_jiner'];
+			
+			
 		}
 		
 		foreach ( $result_compare as $key => $rc ) {
@@ -631,17 +631,23 @@ class Report2016Controller extends Controller {
 						"jsh_jiner" => 0,
 						"jsh_times" => 0,
 						"tf_jiner" => 0,
-						"tf_times" => 0 
+						"tf_times" => 0,
+					
 				)
 				;
-				if ($sub != null and $flag==0) {
+				if ($sub != null and $flag == 0) {
 					array_push ( $result, $sub );
 				}
 			}
-			
 		}
 		
-//	dump($result);
+		foreach($result as $key=> $r){
+			$result[$key]['js_jiner_tongbi']=$r["js_jiner"]-$r["js_jiner_compare"];
+			$result[$key]['jsh_jiner_tongbi']=$r["jsh_jiner"]-$r["jsh_jiner_compare"];
+			$result[$key]['tf_jiner_tongbi']=$r["tf_jiner"]-$r["tf_jiner_compare"];
+		}
+		
+	
 		
 		$total = array (
 				'js_times_total' => $js_times_total,

@@ -39,19 +39,19 @@
 		<td  class='thead'>二级行号</td>
 		<td  class='thead'>行名</td>
 		<td  class='thead'>客户名称</td>
-		<td  class='thead'>结算笔数</td>
+		<td  class='thead' width=30>结算笔数</td>
 		<td  class='thead'>结算金额(美元)</td>
-		<td  class='thead'>去年同期</td>
+		<td  class='thead' width=30>去年同期</td>
 		<td  class='thead'>去年同期</td>
 		<td  class='thead'>同比</td>
-		<td  class='thead'>结售汇笔数</td>
+		<td  class='thead' width=30 >结售汇<br/>笔数</td>
 		<td  class='thead'>结售汇金额(美元)</td>
-		<td  class='thead'>去年同期</td>
+		<td  class='thead' width=30>去年同期</td>
 		<td  class='thead'>去年同期</td>
 		<td  class='thead'>同比</td>
-		<td  class='thead'>融资笔数</td>
+		<td  class='thead' width=30>融资笔数</td>
 		<td  class='thead'>融资金额(美元)</td>
-		<td  class='thead'>去年同期</td>
+		<td  class='thead' width=30>去年同期</td>
 		<td  class='thead'>去年同期</td>
 		<td  class='thead'>同比</td>
 	</tr>
@@ -64,28 +64,40 @@
 		<td align="right"><?php echo (number_format($vo["js_jiner"],2)); ?></td>
 		<td align="center"><?php echo ($vo["js_times_compare"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["js_jiner_compare"],2)); ?></td>
-		<td align="right"><?php echo ($vo["js_jiner-$vo"]["js_jiner_compare"]); ?></td>
-		
+		<?php if(($vo["js_jiner_tongbi"] < 0)): ?><td align="right" style="color:red"><?php echo (number_format($vo["js_jiner_tongbi"],2)); ?></td>
+		<?php else: ?> <td align="right" ><?php echo (number_format($vo["js_jiner_tongbi"],2)); ?></td><?php endif; ?>
 		<td align="center"><?php echo ($vo["jsh_times"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["jsh_jiner"],2)); ?></td>
 		<td align="center"><?php echo ($vo["jsh_times_compare"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["jsh_jiner_compare"],2)); ?></td>
-		<td align="right"><?php echo ($vo["jsh_jiner-$vo"]["jsh_jiner_compare"]); ?></td>
+		<?php if(($vo["jsh_jiner_tongbi"] < 0)): ?><td align="right" style="color:red"><?php echo (number_format($vo["jsh_jiner_tongbi"],2)); ?></td>
+		<?php else: ?> <td align="right" ><?php echo (number_format($vo["jsh_jiner_tongbi"],2)); ?></td><?php endif; ?>
+		
 		
 		<td align="center"><?php echo ($vo["tf_times"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["tf_jiner"],2)); ?></td>
 		<td align="center"><?php echo ($vo["tf_times_compare"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["tf_jiner_compare"],2)); ?></td>
-		<td align="right"><?php echo ($vo["tf_jiner-$vo"]["tf_jiner_compare"]); ?></td>
+		<?php if(($vo["tf_jiner_tongbi"] < 0)): ?><td align="right" style="color:red"><?php echo (number_format($vo["tf_jiner_tongbi"],2)); ?></td>
+		<?php else: ?> <td align="right" ><?php echo (number_format($vo["tf_jiner_tongbi"],2)); ?></td><?php endif; ?>
 	</tr><?php endforeach; endif; else: echo "" ;endif; ?>
 <tr>
 <td colspan=4 align="center">合计</td>
 <td align="center"><?php echo ($total["js_times_total"]); ?></td>
 <td align="right"><?php echo (number_format($total["js_jiner_total"],2)); ?></td>
+<td></td>
+<td></td>
+<td></td>
 <td align="center"><?php echo ($total["jsh_times_total"]); ?></td>
 <td align="right"><?php echo (number_format($total["jsh_jiner_total"],2)); ?></td>
+<td></td>
+<td></td>
+<td></td>
 <td align="center"><?php echo ($total["tf_times_total"]); ?></td>
 <td align="right"><?php echo (number_format($total["tf_jiner_total"],2)); ?></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </table>
 

@@ -14,9 +14,25 @@
 }
 
 </style>
+<!--  
+<br/>
+<div style="background:#fedcba">
+&nbsp;&nbsp;&nbsp;
+	<select >
+			<option>支行汇总排序</option>	
+			<option>结算量排序</option>	
+			<option>结算量增幅排序</option>	
+			<option>结售汇量排序</option>	
+			<option>结售汇增幅排序</option>	
+			<option>贸易融资量排序</option>	
+			<option>贸易融资量增幅排序</option>	
+	
+	</select>
 
+</div>
+<br/>
 
-
+-->
 <table id='tb_client_report' class='t_border'   border=1>
 	<tr>
 		<td  class='thead'>一级行号</td>
@@ -25,10 +41,19 @@
 		<td  class='thead'>客户名称</td>
 		<td  class='thead'>结算笔数</td>
 		<td  class='thead'>结算金额(美元)</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>同比</td>
 		<td  class='thead'>结售汇笔数</td>
 		<td  class='thead'>结售汇金额(美元)</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>同比</td>
 		<td  class='thead'>融资笔数</td>
 		<td  class='thead'>融资金额(美元)</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>去年同期</td>
+		<td  class='thead'>同比</td>
 	</tr>
 	<?php if(is_array($client_yw)): $i = 0; $__LIST__ = $client_yw;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 		<td align="center"><?php echo ($vo["upbranch"]); ?></td>
@@ -37,10 +62,21 @@
 		<td align="center" id='<?php echo ($vo["custno"]); ?>' class='client'  name='<?php echo ($vo["name"]); ?>' ><?php echo ($vo["name"]); ?></td>
 		<td align="center"><?php echo ($vo["js_times"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["js_jiner"],2)); ?></td>
+		<td align="center"><?php echo ($vo["js_times_compare"]); ?></td>
+		<td align="right"><?php echo (number_format($vo["js_jiner_compare"],2)); ?></td>
+		<td align="right"><?php echo ($vo["js_jiner-$vo"]["js_jiner_compare"]); ?></td>
+		
 		<td align="center"><?php echo ($vo["jsh_times"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["jsh_jiner"],2)); ?></td>
+		<td align="center"><?php echo ($vo["jsh_times_compare"]); ?></td>
+		<td align="right"><?php echo (number_format($vo["jsh_jiner_compare"],2)); ?></td>
+		<td align="right"><?php echo ($vo["jsh_jiner-$vo"]["jsh_jiner_compare"]); ?></td>
+		
 		<td align="center"><?php echo ($vo["tf_times"]); ?></td>
 		<td align="right"><?php echo (number_format($vo["tf_jiner"],2)); ?></td>
+		<td align="center"><?php echo ($vo["tf_times_compare"]); ?></td>
+		<td align="right"><?php echo (number_format($vo["tf_jiner_compare"],2)); ?></td>
+		<td align="right"><?php echo ($vo["tf_jiner-$vo"]["tf_jiner_compare"]); ?></td>
 	</tr><?php endforeach; endif; else: echo "" ;endif; ?>
 <tr>
 <td colspan=4 align="center">合计</td>

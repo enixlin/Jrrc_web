@@ -546,10 +546,7 @@ class Report2016Controller extends Controller {
 		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );
 		$result_compare = $this->Client_Report ( $start_compare, $end_compare );
 		
-		//dump($result);
-		
-		
-		
+		// dump($result);
 		
 		$js_times_total = null;
 		$js_jiner_total = null;
@@ -566,17 +563,36 @@ class Report2016Controller extends Controller {
 		$tf_jiner_total_compare = null;
 		
 		// dump($result);
-		foreach ( $result as $key=>$r ) {
-
-			foreach($result_compare as $rc){
-				if(strcmp($r['name'],$rc['name'])==0){
-				 $result[$key]['jsh_times_compare']=$rc['jsh_times'];
-				 $result[$key]['jsh_jiner_compare']=$rc['jsh_jiner'];
-				 $result[$key]['js_times_compare']=$rc['js_times'];
-				 $result[$key]['js_jiner_compare']=$rc['js_jiner'];
-				 $result[$key]['tf_times_compare']=$rc['tf_times'];
-				 $result[$key]['tf_jiner_compare']=$rc['tf_jiner'];
+		foreach ( $result as $key => $r ) {
+			$ff=0;
+			foreach ( $result_compare as $rc ) {
+				
+				if (strcmp ( $r ['name'], $rc ['name'] ) == 0) {
+					$result [$key] ['jsh_times_compare'] = $rc ['jsh_times'];
+					$result [$key] ['jsh_jiner_compare'] = $rc ['jsh_jiner'];
+					$result [$key] ['js_times_compare'] = $rc ['js_times'];
+					$result [$key] ['js_jiner_compare'] = $rc ['js_jiner'];
+					$result [$key] ['tf_times_compare'] = $rc ['tf_times'];
+					$result [$key] ['tf_jiner_compare'] = $rc ['tf_jiner'];
+					$ff=1;
 				}
+// 				else{
+// 					$result [$key] ['jsh_times_compare'] = 0;
+// 					$result [$key] ['jsh_jiner_compare'] = 0;
+// 					$result [$key] ['js_times_compare'] = 0;
+// 					$result [$key] ['js_jiner_compare'] = 0;
+// 					$result [$key] ['tf_times_compare'] = 0;
+// 					$result [$key] ['tf_jiner_compare'] = 0;
+// 				}
+			}
+			
+			if($ff==0){
+									$result [$key] ['jsh_times_compare'] = 0;
+									$result [$key] ['jsh_jiner_compare'] = 0;
+									$result [$key] ['js_times_compare'] = 0;
+									$result [$key] ['js_jiner_compare'] = 0;
+									$result [$key] ['tf_times_compare'] = 0;
+									$result [$key] ['tf_jiner_compare'] = 0;
 			}
 			
 			$js_times_total = $js_times_total + $r ['js_times'];
@@ -585,29 +601,47 @@ class Report2016Controller extends Controller {
 			$jsh_jiner_total = $jsh_jiner_total + $r ['jsh_jiner'];
 			$tf_times_total = $tf_times_total + $r ['tf_times'];
 			$tf_jiner_total = $tf_jiner_total + $r ['tf_jiner'];
-				
 		}
 		
-		
-		//计算$result的记录总数
-		//$count=array_count_values($result);
-			
-		foreach ( $result_compare as $key=>$rc ) {
-		 	$flag=0;
-			foreach($result as $r){
-				if(strcmp($r['name'],$rc['name'])!=0){
-					$flag=1;
+		foreach ( $result_compare as $key => $rc ) {
+			$flag = 0;
+			foreach ( $result as $r ) {
+				if (strcmp ( $r ['name'], $rc ['name'] ) != 0) {
+					$flag = 1;
 				}
 			}
-							
-			if($flag==0){
-				array_push($result, $rc);
+			$sub;
+			if ($flag == 1) {
+				$sub = array (
+						"upbranch" => $rc ['upbranch'],
+						"branch" => $rc ['branch'],
+						"custno" => $rc ['custno'],
+						"name" => $rc ['name'],
+						"br_name" => $rc ['br_name'],
+						
+						"js_times_compare" => $rc ['js_times'],
+						"js_jiner_compare" => $rc ['js_jiner'],
+						"jsh_jiner_compare" => $rc ['jsh_jiner'],
+						"jsh_times_compare" => $rc ['jsh_times'],
+						"tf_jiner_compare" => $rc ['tf_jiner'],
+						"tf_times_compare" => $rc ['tf_times'],
+						
+						"js_times" => 0,
+						"js_jiner" => 0,
+						"jsh_jiner" => 0,
+						"jsh_times" => 0,
+						"tf_jiner" => 0,
+						"tf_times" => 0 
+				)
+				;
+				if ($sub != null and $flag==0) {
+					array_push ( $result, $sub );
+				}
 			}
-		
+			
 		}
 		
-dump($result);
-		
+//	dump($result);
 		
 		$total = array (
 				'js_times_total' => $js_times_total,
@@ -783,9 +817,9 @@ dump($result);
 	
 	// 生成全行业务量分月柱状图
 	public function All_Barplot($start, $end) {
-		$result = $this->get_All_Report_Month ( $start, $end );		
+		$result = $this->get_All_Report_Month ( $start, $end );
 		$start_compare = "" . (substr ( $start, 0, 4 ) - 1) . substr ( $start, 4, 4 );
-		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );		
+		$end_compare = "" . (substr ( $end, 0, 4 ) - 1) . substr ( $end, 4, 4 );
 		$result_compare = $this->get_All_Report_Month ( $start_compare, $end_compare );
 		
 		$title = "全行国际结算量分月明细图";
@@ -795,7 +829,7 @@ dump($result);
 		foreach ( $result as $v ) {
 			array_push ( $time, $v ['month'] );
 			array_push ( $amount1, $v ['jiner'] / 10000 );
-		}		
+		}
 		foreach ( $result_compare as $v ) {
 			if ($v ['jiner'] == 0) {
 				array_push ( $amount2, 0 );
@@ -803,8 +837,8 @@ dump($result);
 				array_push ( $amount2, $v ['jiner'] / 10000 );
 			}
 		}
-		$yw_type = '国际结算量';		
-		$this->barplot ( $title, $yw_type, $time, $amount1,$amount2 );
+		$yw_type = '国际结算量';
+		$this->barplot ( $title, $yw_type, $time, $amount1, $amount2 );
 	}
 	
 	/*
@@ -842,9 +876,9 @@ dump($result);
 		
 		// Create the bar plots
 		// 以每一个数据组生成一个柱状图
-		$b1plot = new \BarPlot ( $amount1 );   //当期的数据
-		$b2plot = new \BarPlot ( $amount2 );   //去年同期的数据
-		
+		$b1plot = new \BarPlot ( $amount1 ); // 当期的数据
+		$b2plot = new \BarPlot ( $amount2 ); // 去年同期的数据
+		                                     
 		// 标指说明
 		$b1plot->SetLegend ( iconv ( 'utf-8', 'gb2312', $yw_type ) );
 		$b2plot->SetLegend ( iconv ( 'utf-8', 'gb2312', $yw_type . "(去年同期)" ) );
@@ -1161,7 +1195,7 @@ dump($result);
 					$flag_js = 1;
 				}
 			}
-			//如果三项业务都没有，则把这个客户从数组中剔除
+			// 如果三项业务都没有，则把这个客户从数组中剔除
 			if ($flag_js == 0 && $flag_jsh == 0 && $flag_tf == 0) {
 				unset ( $result_client [$key] );
 				continue;

@@ -1,0 +1,12 @@
+<div id="condition_div" class='condition'>
+        支行名称：<select name="unit_name" id="unit_name">
+                        <volist name='unit'  id="vo">
+                        <option value="">{$vo.br_name}</option>
+                        </volist>
+                        </select>
+    
+        客户名称：<input type='text'  name='client_name' />
+        开始日期：<input type='text'  name='start' />
+        结束日期：<input type='text'  name='end' />
+        <input type='button'  value='查询'  name='check' />
+</div>

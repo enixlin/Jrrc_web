@@ -1,0 +1,15 @@
+
+用户名：
+<select name='name' id='name'>
+<volist name='namelist' id ="vo">
+<option value={$vo.id}>{$vo.name}</option>
+</volist>
+</select>
+</br>
+
+所属用户组：
+<volist name='usergroup' id='v'>
+<input type="checkbox" />{$v.name} 
+</volist>
+ </br>
+

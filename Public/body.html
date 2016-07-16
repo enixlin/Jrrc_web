@@ -1,0 +1,64 @@
+<div id="loginDiv">
+    <div id="loginForm">
+        <form action="#" method='post'>
+            <br/>
+            <p><b>名 称：</b><input type="text" id='username' /></p>
+            <p><b>密 码：</b><input type="password" id='password' /></p>
+            <p>
+                <input type="button" value="数据管理" id='re'>
+                &nbsp;
+                <input type="button" value="登  录" id='en'>
+            </p>
+        </form>
+        <hr style="color:orange">
+        
+        <p>请在上面的输入框中输入用户名和密码，登录后可使用 [记事台账] 等功能</p>
+        <p style="color:orange">***** 请注意 ****</p>
+    </div>
+    
+</div>
+
+<style>
+
+#loginDiv{
+
+    border: 1px solid orange;
+ 
+
+}
+#loginForm{
+    text-align: center;
+    width: 300px;
+    height: 350px;
+    border: 1px solid orange;
+    float: right;
+    margin: 50px 20px auto;
+    
+
+}
+#loginForm p{
+color: gray;
+font-family: 微软雅黑;
+}
+</style>
+<script>
+    $(function(){
+        $("#loginForm").draggable();
+        $('#loginForm>form>p>input').button();
+        //$('#loginForm>form>p>input:text').text();
+        $("#en").click(function(){
+            clearInterval(timer1);
+       
+        });
+
+
+        var timer1=null;  //创建一个新的对象
+        timer1=setInterval(rollText,800);//设定时间间隔调用对象的方法
+
+        function rollText(){      
+            $("#loginForm>p:last").toggle();
+        }
+               
+ 
+    });
+</script>

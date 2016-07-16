@@ -1,0 +1,151 @@
+<style>
+
+.br{
+   cursor:pointer
+}
+.thead {
+	text-align: center;
+	background: #abcdef;
+}
+
+.total {
+	background: #FFCB99
+}
+
+.sub_total {
+	background: lightgreen
+}
+.width_brid {
+	width: 50px
+}
+
+.width_brname {
+	width: 120px
+}
+
+.font-aril {
+	font-family: arial
+}
+
+.t_border {
+	cellspacing: 0px, cellpadding:0px, border-collapse:collapse
+}
+</style>
+
+<table border=1 width="100%" id='table_settlement'>
+
+	<tr>
+		<td class='thead width_brid'></td>
+		<td class='thead width_brname'></td>
+		<td class='thead ,width' colspan=4>国际结算量</td>
+		<td class='thead ,width' colspan=4>结售汇量</td>
+		<td class='thead ,width' colspan=3>有效对公客户数</td>
+		<td class='thead ,width' colspan=3>储蓄存款日均增量</br>( {$date_cxrj})</td>
+		
+	</tr>
+
+	<tr>
+		<td class='thead width_brid'>行号</td>
+		<td class='thead width_brname'>经营单位名称</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率(%)</td>
+		<td class='thead ,width'>本季业绩</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率(%)</td>
+		<td class='thead ,width'>本季业绩</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率(%)</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率(%)</td>	
+	</tr>
+	
+	<volist name='report' id='vo' key='no'>
+		
+		<if condition='$vo.Head_office eq 08100'>
+		<tr>
+			<td>{$vo.br_id}</td>
+			<td>{$vo.br_name}</td>
+			<td>{$vo.task_amount_js}</td>
+			<td>{$vo.amount_js}</td>
+			<td>{$vo.js_complete_rate}</td>
+			<td>空</td>
+		
+			<td>{$vo.task_amount_jsh}</td>
+			<td>{$vo.amount_jsh}</td>
+			<td>{$vo.jsh_complete_rate}</td>
+			<td>空</td>
+			
+			<td>{$vo.task_amount_client}</td>
+			<td>{$vo.amount_client}</td>
+			<td>{$vo.client_complete_rate}</td>
+			
+			<td>{$vo.task_amount_cx}</td>
+			<td>{$vo.amount_cx}</td>
+			<td>{$vo.cx_complete_rate}</td>
+		
+		</tr>
+		</if>
+	</volist>
+	
+
+</table>
+
+<script>
+
+$("#table_settlement td").bind('click', function(evgl) {
+
+	var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+	var br_id=evg.id;
+	var url='';
+	if(br_id!=''){
+		if(br_id=='08128' || br_id=='08130' || br_id=='08132' || br_id=='08108'){
+			url='/jrrc_web/home/report/mkunit_ywl_month';
+		}else{
+			url='/jrrc_web/home/report/mkbranch_ywl_month';
+		}
+
+
+
+		var start=$("#start").val();
+		var end = $("#end").val();
+
+		url=url+"/br_id/"+br_id;
+			url=url+"/type/01";
+			url=url+"/start/"+start;
+			url=url+"/end/"+end;
+			window.open(url,evg.id,"width=1200px,height=600px,top=50,left=60");
+
+	}
+
+});
+
+
+	$("#table_settlement").css({
+		"width" : "100%",
+		"border" : "0px solid gray",
+		"cellspacing" : "0",
+		"cellpadding" : "0",
+		'border-collapse' : 'collapse'
+	});
+	$("#table_settlement td").css({
+		"border" : "1px solid gray",
+		"cellspacing" : "0",
+		"cellpadding" : "0",
+		'border-collapse' : 'collapse',
+		'height' : '15px',
+		'font-size' : '12px'
+	});
+
+	$("#table_settlement td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_settlement td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+</script>

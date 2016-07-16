@@ -1,0 +1,190 @@
+
+<table id='schedule_table' width='98%' height='450px'>
+	<tr>
+		<td colspan=6>日程记事,{$month}</td>
+		<td colspan=1 align="right">[添加记事] <img id='addimg' width='16px'
+			height='16px' src="/Jrrc_web/Public/res/ico/Post-It.ico" alt="添加记事"
+			title='添加记事' align="right" />&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td align="center" STYLE='background: #84FFFF'>星期一</td>
+		<td align="center" STYLE='background: #84FFFF'>星期二</td>
+		<td align="center" STYLE='background: #84FFFF'>星期三</td>
+		<td align="center" STYLE='background: #84FFFF'>星期四</td>
+		<td align="center" STYLE='background: #84FFFF'>星期五</td>
+		<td align="center" STYLE='background: #84FFFF'>星期六</td>
+		<td align="center" STYLE='background: #84FFFF'>星期日</td>
+	</tr>
+
+	<volist name='daylist' id='vo' key='k'> 
+	
+	<if condition='($k-1)%7 eq 0'>
+		<tr>
+	</if>
+	
+	<td width='14%' height='16%' style="vertical-align:top">
+	
+		<!--输出日期 当月的周六日 --> 
+		<if condition='(($k+1)%7 eq 0 or ($k)%7 eq 0) and $month eq substr($key,5,2)'>
+		<div style='width: 100%; height: 100%; background: white ;float:left'>
+				<!-- 日期 -->
+				<div style="color: red; background: #F1F1F1; width: 10%;float:left">{$key|substr=8,2}</div>
+				<!--输出本日记事  -->
+		 		<if condition='count($vo) egt 3'>
+		   			<div id='moretitle' style='width: 100%;height:20px;float:left; background: orange;'>
+		   			<img id='all' src="/Jrrc_web/Public/res/ico/Pin-red.ico" id={$dd.date}  width='16px' height='16px' />
+		   			显示全部记事...
+		   			</div>
+		   			<div id='alltitle' style='width: 100%;float:left; background:white;display:none '>
+				   			<volist name='vo' id='dd'>
+							<div style='width: 100%;height:20px;float:left;'>
+							<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+							{$dd.title}
+							</div>
+							</volist>	
+		   			</div>
+				<else/>
+				<volist name='vo' id='dd'>
+					<div style='width: 100%;height:20px;float:left;'>
+					<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+					{$dd.title}
+					</div>
+				</volist>	
+				</if>			
+			</div> 
+		</if>
+	
+		
+		 <!--输出日期 当月的星期1-5 -->
+		  <if condition='(($k+1)%7 neq 0 and ($k)%7 neq 0) and $month eq substr($key,5,2)'>
+			<div style='width: 100%; height: 100%; background: #FFFFFF ;float:left'>
+				<!-- 日期 -->
+				<div style="color: blue; background: #F1F1F1; width: 10%;float:left">{$key|substr=8,2}</div>
+				<!--输出本日记事  -->
+		 		<if condition='count($vo) egt 3'>
+		   			<div id='moretitle' style='width: 100%;height:20px;float:left; background: orange;'>
+		   			<img id='all' src="/Jrrc_web/Public/res/ico/Pin-red.ico" id={$dd.date}  width='16px' height='16px' />
+		   			显示全部记事...
+		   			</div>
+		   			<div id='alltitle' style='width: 100%;float:left; background:white;display:none '>
+				   			<volist name='vo' id='dd'>
+							<div style='width: 100%;height:20px;float:left;'>
+							<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+							{$dd.title}
+							</div>
+							</volist>	
+		   			</div>
+				<else/>
+				<volist name='vo' id='dd'>
+					<div style='width: 100%;height:20px;float:left;'>
+					<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+					{$dd.title}
+					</div>
+				</volist>	
+				</if>			
+			</div> 
+		</if>
+		
+		
+		<!--输出日期 不是当月的其他日期 --> 
+		<if condition=' $month neq substr($key,5,2) and strlen($key) gt 2'>	
+			<div style='width: 100%; height: 100%; background: #f1f1f1 ;float:left'>
+				<!-- 日期 -->
+				<div style="color: gray; background: #F1F1F1; width: 10%;float:left">{$key|substr=8,2}</div>
+				<!--输出本日记事  -->
+		 		<if condition='count($vo) egt 3'>
+		   			<div id='moretitle' style='width: 100%;height:20px;float:left; background: orange;'>
+		   			<img id='all' src="/Jrrc_web/Public/res/ico/Pin-red.ico" id={$dd.date}  width='16px' height='16px' />
+		   			显示全部记事...
+		   			</div>
+		   			<div id='alltitle' style='width: 100%;float:left; background:white;display:none '>
+				   			<volist name='vo' id='dd'>
+							<div style='width: 100%;height:20px;float:left;'>
+							<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+							{$dd.title}
+							</div>
+							</volist>	
+		   			</div>
+				<else/>
+				<volist name='vo' id='dd'>
+					<div style='width: 100%;height:20px;float:left;'>
+					<img src="/Jrrc_web/Public/res/ico/Pin{$dd.level}.ico" id={$dd.id}  width='16px' height='16px' title={$dd.content}/>
+					{$dd.title}
+					</div>
+				</volist>	
+				</if>			
+			</div> 
+		</if>
+	
+	</td>
+	
+	<if condition='($k)%7 eq 0'>
+	</tr>
+	</if> 
+	
+	</volist>
+
+</table>
+
+
+<script>
+
+var addBoxIsOpen=0;
+
+
+	$("#schedule_table").css({
+		"border" : "0px solid orange",
+		"CellSpacing" : "0",
+		"CellPadding" : "0",
+		'border-collapse' : 'collapse',
+		'margin' : '5px'
+	});
+	$("#schedule_table td").css({
+		"border" : "1px solid orange",
+		'border-collapse' : 'collapse',
+		'vertical-align' : 'text-top',
+		'font-size' : '12px'
+	});
+	
+	$("#moretitle").bind('click',function(evgl){
+		var evg = evgl.srcElement ? evgl.sElement : evgl.target;//
+		//$(evg).next().fadeToggle();
+	});
+
+
+	$("img").bind('click', function(evgl) {
+		var evg = evgl.srcElement ? evgl.sElement : evgl.target;//
+		//alert(evg.id);
+		if (evg.id =="addimg" ) {
+			addMeno();
+		} else if(evg.id !="all") {
+			//alert("else");
+			$.post('/Jrrc_web/Home/Schedule/showmodifybox', {
+				'id' : evg.id
+			}, function(msg) {
+				$("#div_modify_schedule").html(msg);
+
+			});
+		}
+	});
+
+	function addMeno() {
+		
+		if(addBoxIsOpen==1){
+			return;
+		}
+		$("#div_input_schedule").html('');
+	
+		
+		$("#div_input_schedule").on('dialogclose', function() {
+			$("#div_input_schedule").html('');
+			addBoxIsOpen=0;
+		});
+		
+		$.get('/Jrrc_web/Home/Schedule/showaddbox', function(msg) {
+			$("#div_input_schedule").html(msg);
+			addBoxIsOpen=1;
+		});
+	};
+</script>

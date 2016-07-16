@@ -1,0 +1,53 @@
+
+<table style="" id='UserListtable'>
+	<tr>
+		<td align='center' colspan='6'
+			style='background: orange; color: white'><strong>用户维护</strong></td>
+	</tr>
+	<tr>
+		<td width='5%' align="center">ID</td>
+		<td width='10%' align="center">用户名称</td>
+		<td width='10%' align="center">所属用户组</td>
+		<td width='15%' align="center">状态</td>
+		<td width='60%' align="center" colspan="2">维护</td>
+	</tr>
+	<volist name='list' id='vo'>
+	<tr>
+		<td align="center">{$vo.id}</td>
+		<td align="center">{$vo.name}</td>
+		<td align="center">{$vo['Role'][0].name}</td>		
+		<td align="center">{$vo.status}</td>
+		<td align="center" style='color: gray'>
+		<a href="">【权限维护】</a> 
+		<a href="/Jrrc_web/Admin/Rbac/deleteUser/id/{$vo.id}"></a>
+		</td>
+		<td align='center'>
+		<input type="checkbox" />
+		</td>	
+	</tr>
+	<tr>
+	<td colspan="6" align="center"><input type="button" value='删除用户' id='btn_deleteUser' /></td>
+	</tr>
+	</volist>
+
+</table>
+
+
+
+<script>
+	$(function() {
+		$("#UserListtable").css({
+			"border-color" : "gray",
+			"border" : "1px solid orange",
+			"cellspacing" : "1px",
+			"border-collapse" : "collapse",
+			"width" : "100%",
+			"align" : "center"
+		});
+		$("#UserListtable td").css({
+			"border-color" : "orange",
+			"border" : "1px solid orange"
+		});
+		
+	});
+</script>

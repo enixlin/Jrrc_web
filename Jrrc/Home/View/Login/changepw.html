@@ -1,0 +1,47 @@
+<link rel="stylesheet"
+	href="/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.css" />
+<script src='/Jrrc_web/Public/jquery/jquery.js'></script>
+<script src='/Jrrc_web/Public/jquery/jquery_ui/jquery_ui.min.js'></script>
+
+
+
+<form action="" id='fm_userinfo'>
+
+设定用户信息：</br></br>
+户名：<select name="id"  id="name">
+<volist name='userlist' id ='vo'>
+   <option value={$vo.id}>{$vo.name}</option>
+</volist>
+</select></br></br>
+旧密码：<input type="text"  name='oldpw' id='oldpw' /></br></br>
+新密码：<input type="text"  name='newpw'  id='newpw'  /></br></br>
+确认密码：<input type="text"  name='confirmnewpw'  id='confirmnewpw'  /></br></br>
+<input type="reset"  value='重置'  />
+<input type="button"  value='保存'  id='btn_submit'/>
+
+</form>
+
+<script>
+		$(function(){
+			$("#btn_submit").bind('click',function(){
+
+				if($("#confirmnewpw").val()!=$("#newpw").val()){
+					alert('两次输入的新密码不一致！');
+					return;
+				}
+
+				var data=$("#fm_userinfo").serialize();
+				$.post('/Jrrc_web/Home/Login/handlechangepw',data,function(msg){
+					if(msg!=1){
+						alert(msg);
+					}
+					else {
+						alert("更新成功");
+						window.location.href='http://141.1.51.106/jrrc_web/';
+					}
+				});
+			});
+			
+		});
+
+</script>

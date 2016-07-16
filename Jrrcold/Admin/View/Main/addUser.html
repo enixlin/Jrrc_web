@@ -1,0 +1,66 @@
+<form action="" ,method='post' id="addUserForm"  >
+
+	<table id="addUserTable" width="100%" border="1" border-color='white' >
+		<tr>
+			<td width="100%"  colspan="2"  align="center"  style="color:white;background:orange"><strong>添加用户</strong></td>
+			
+		</tr>
+		<tr>
+			<td width="30%" align="right">户名</td>
+			<td width="70%"><input type="text" name="name" id="name" /></td>
+		</tr>
+		<tr>
+			<td width="30%" align="right">密码</td>
+			<td width="70%"><input type="text" name="password" id="password" /></td>
+		</tr>
+		<tr>
+			<td width="30%" align="right">所属用户组</td>
+			<td width="70%">
+			<select name="role" id="role">
+			<volist name='role' id='vo'>
+			<option value={$vo.id}>{$vo.title}</option>
+			</volist>
+			</select></td>
+		</tr>
+		<tr>
+			<td width="30%" align="right">启用</td>
+			<td width="70%"><input type="radio" name="status" value=1  checked='checked'/> <label>是</label>
+				<input type="radio" name="status" value=0  id='status'/><label>否</label></td>
+		</tr>
+		<tr>
+		<td width="30%" align="right">*</td>
+			<td colspan="" align="left"><input id="submit" value="保 存 用 户"
+				type="button" /></td>
+		</tr>
+	</table>
+</form>
+
+
+<script>
+$("#submit").button();
+$("#addUserTable").css({"border-color":"gray","border":"1px","cellspacing":"1px","border-collapse":"collapse"});
+$("#addUserTable td").css({"border-color":"orange"});
+
+//$("#addUserForm").dialog();
+
+
+
+$(function(){
+	$("#submit").bind('click',function(){
+		var formdata=$("form").serialize();
+		$.post('/Jrrc_web/Admin/Rbac/addUser/',formdata,function(msg){
+			if(msg.info=='ok'){
+				if(confirm("添加用户成功，是否继续添加？")){
+				}
+				else{
+				window.location='/Jrrc_web/Admin/Index/main';
+				}
+			}
+			else{
+				alert(msg.info);
+			}
+		});
+	});
+});
+
+</script>

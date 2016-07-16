@@ -1,0 +1,184 @@
+<style>
+.thead {
+	text-align: center;
+	background: #abcdef;
+}
+
+.total {
+	background: #FFCB99
+}
+
+.sub_total {
+	background: lightgreen
+}
+.width_brid {
+	width: 50px
+}
+
+.width_brname {
+	width: 120px
+}
+
+.font-aril {
+	font-family: arial
+}
+
+.t_border {
+	cellspacing: 0px, cellpadding:0px, border-collapse:collapse
+}
+</style>
+
+<table border=1 width="100%" id='table_settlement'>
+
+	<tr>
+		<td class='thead width_brid'>行号</td>
+		<td class='thead width_brname'>经营单位名称</td>
+		<td class='thead ,width' colspan=3>国际结算量</td>
+		<td class='thead ,width' colspan=3>结售汇量</td>
+		<td class='thead ,width' colspan=3>客户数</td>
+		<td class='thead ,width' colspan=3>储蓄存款日均增量</br>( {$date_cxrj})</td>
+		
+	</tr>
+
+	<tr>
+		<td class='thead width_brid'>行号</td>
+		<td class='thead width_brname'>经营单位名称</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率</td>
+		<td class='thead ,width'>任务</td>
+		<td class='thead ,width'>实绩</td>
+		<td class='thead ,width'>完成率</td>
+		
+		
+	</tr>
+	<volist name='result' id='vo'> <if
+		condition="$vo.p_id eq '08100' ">
+	<tr>
+		<td align="center">{$vo.br_id}</td>
+		<td align="center">
+		<if condition='$vo.br_name eq 国际业务部'>
+			代理联社业务 </if> 
+		<if condition='$vo.br_name eq 总行营业部本部'> 总营 </if> 
+		<if condition='$vo.br_name neq 总行营业部本部  and $vo.br_name neq 国际业务部'>
+			{$vo.br_name|str_replace='本部','',###} </if>
+		</td>
+		<td align='right' class='font-aril'>{$vo['js_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['js_amount']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['js_amount']/$vo['js_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_amount']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_amount']/$vo['jsh_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['client_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['client_amount']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['client_amount']/$vo['client_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj']/$vo['cxrj_task']/10000|number_format=###,2}</td>
+	</tr>
+	</if> </volist>
+	<tr class='sub_total'>
+		<td colspan=2 align="center" class='sub_total'>支行合计</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_js_branch|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_js_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_js_branch/$task_js_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_jsh_branch|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_jsh_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_jsh_branch/$task_jsh_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_client_branch|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_client_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_client_branch/$task_client_branch/10000|number_format=###,2}</td>	
+		<td align="center"  class='font-aril sub_total'' >{$task_cxrj_branch|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_cxrj_branch/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_cxrj_branch/$task_cxrj_branch/10000|number_format=###,2}</td>
+		
+	</tr>
+	<volist name='result' id='vo'> <if
+		condition="$vo.p_id eq '08101' ">
+	<tr>
+		<td align="center">{$vo.br_id}</td>
+		<td align="center"><if condition='$vo.br_name eq 国际业务部'>
+			代理联社业务 </if> <if condition='$vo.br_name eq 总行营业部本部'> 总营 </if> <if
+				condition='$vo.br_name neq 总行营业部本部  and $vo.br_name neq 国际业务部'>
+			{$vo.br_name|str_replace='本部','',###} </if></td>
+		<td align='right' class='font-aril'>{$vo['js_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['js_amount']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['js_amount']/$vo['js_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_amount']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['jsh_amount']/$vo['jsh_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['client_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['client_amount']|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['client_amount']/$vo['client_task']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj_task']|number_format=###}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj']/10000|number_format=###,2}</td>
+		<td align='right' class='font-aril'>{$vo['cxrj']/$vo['cxrj_task']/10000|number_format=###,2}</td>
+	</tr>
+	</if> </volist>
+	<tr class='sub_total'>
+		<td colspan=2 align="center" class='sub_total'>部室合计</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_js_department|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_js_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_js_department/$task_js_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_jsh_department|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_jsh_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_jsh_department/$task_jsh_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$task_client_department|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_client_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_client_department/$task_client_department/10000|number_format=###,2}</td>	
+		<td align="center"  class='font-aril sub_total'' >{$task_cxrj_department|number_format=###}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_cxrj_department/10000|number_format=###,2}</td>
+		<td align="center"  class='font-aril sub_total'' >{$amount_cxrj_department/$task_cxrj_department/10000|number_format=###,2}</td>
+	</tr>
+	<tr>
+		<td colspan=2 class='total'>全行合计</td>
+		<td align="center" class='total font-aril'>{$task_js_department+$task_js_branch|number_format=###}</td>
+		<td align="center" class='total font-aril'>{$amount_js_department/10000+$amount_js_branch/10000|number_format=###,2}</td>
+		<td align="center" class='total font-aril'>0</td>
+		<td align="center" class='total font-aril'>{$task_jsh_department+$task_jsh_branch|number_format=###}</td>
+		<td align="center" class='total font-aril'>{$amount_jsh_department/10000+$amount_jsh_branch/10000|number_format=###,2}</td>
+		<td align="center" class='total font-aril'>0</td>
+		<td align="center" class='total font-aril'>{$task_client_department+$task_client_branch|number_format=###}</td>
+		<td align="center" class='total font-aril'>{$amount_client_department/10000+$amount_client_branch/10000|number_format=###,2}</td>
+		<td align="center" class='total font-aril'>0</td>
+		<td align="center" class='total font-aril'>{$task_cxrj_department+$task_cxrj_branch|number_format=###}</td>
+		<td align="center" class='total font-aril'>{$amount_cxrj_department/10000+$amount_cxrj_branch/10000|number_format=###,2}</td>
+		<td align="center" class='total font-aril'>0</td>
+	</tr>
+
+
+
+</table>
+
+<script>
+	$("#table_settlement").css({
+		"width" : "100%",
+		"border" : "0px solid gray",
+		"cellspacing" : "0",
+		"cellpadding" : "0",
+		'border-collapse' : 'collapse'
+	});
+	$("#table_settlement td").css({
+		"border" : "1px solid gray",
+		"cellspacing" : "0",
+		"cellpadding" : "0",
+		'border-collapse' : 'collapse',
+		'height' : '15px',
+		'font-size' : '13px'
+	});
+
+	$("#table_settlement td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_settlement td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+</script>

@@ -1,0 +1,253 @@
+<?php
+
+namespace Home\Controller;
+
+use Think\Controller;
+
+class UpdateController extends Controller {
+	
+	
+	public function index(){
+		//比较日期，如果需要就更新数据库
+		if (!$this->comparedate()){
+				$this->redirect('/Home/chart/search','正在跳转');
+		}else{
+					//下载文件 
+					if ($this->getftpfile()){
+						echo "文件下载成功</br>";
+						//打开数据库连接
+							if(!$connect=$this->connectdatabase()){
+								echo "打开数据库失败</br>";
+							}else{
+								//导入数据
+								$ywls='../Jrrc_web/Public/data/ifx_iss_cfmbusi.dat';
+								$table_ywls='jrrc_ywls';
+								$updatecount=0;
+											if($updatecount=$this->importdata($ywls, $table_ywls, $connect)){
+												echo "更新业务流水成功：共".$updatecount."条记录</br>";
+											}
+									}	
+						}
+		}
+	}
+
+	// 打开数据库连接参数
+	public function connectdatabase() {
+		$host = 'localhost';
+		$username = 'root';
+		$password = 'root';
+		// 打开数据库连接
+		$connect = mysql_connect ( $host, $username, $password );
+		return $connect;
+	}
+	
+	/*
+	 * ftp获取数据流水文件
+	 *
+	 * $ftp 服务器地址
+	 * $name 用户名
+	 * $password 密码
+	 */
+	public function getftpfile() {
+		//融和ftp登录信息
+		$ftp_server='141.0.189.69';
+		$ftp_user_name='gj';
+		$ftp_user_password='gj';
+	
+		// 连接
+		$conn_id = ftp_connect ( $ftp_server );
+		// 登录
+		$login_result = ftp_login ( $conn_id, $ftp_user_name, $ftp_user_password );
+	
+		// 获取目录下所有的文件夹
+		$dir = ftp_nlist ( $conn_id, "/" );
+	
+		// path to remote file
+		// 远程和本地文件夹定义
+		$remote_directory=$dir[count($dir)-1]."/";
+		// 业务流水
+		$remote_file_ywls = $remote_directory . 'ifx_iss_cfmbusi.dat';
+		$local_file_ywls = '../Jrrc_web/Public/data/ifx_iss_cfmbusi.dat';
+		// 机构信息
+		$remote_file_jg = $remote_directory . 'c_brchno.dat';
+		$local_file_jg = '../Jrrc_web/Public/data/c_brchno.dat';
+		// 客户属地
+		$remote_file_kusd = $remote_directory . 'ifx_iss_cust.dat';
+		$local_file_kusd = '../Jrrc_web/Public/data/ifx_iss_cust.dat';
+	
+		// 文件读写句柄
+		$handle_ywls = fopen ( $local_file_ywls, 'w' );
+		$handle_jg = fopen ( $local_file_jg, 'w' );
+		$handle_kusd = fopen ( $local_file_kusd, 'w' );
+	
+		// 文件下载成功标志
+		$flag_ywls = null;
+		$flag_jg = null;
+		$flag_kusd = null;
+	
+		// try to download $remote_file and save it to $handle
+		if (ftp_fget ( $conn_id, $handle_ywls, $remote_file_ywls, FTP_ASCII, 0 )) {
+			echo "【业务流水】成功下载   </br>";
+			$flag_ywls = 1;
+		} else {
+			echo "【业务流水】下载失败   </br>";
+			$flag_ywls = 0;
+		}
+		if (ftp_fget ( $conn_id, $handle_jg, $remote_file_jg, FTP_ASCII, 0 )) {
+			echo "【机构信息表】成功下载   </br>";
+			$flag_jg = 1;
+		} else {
+			echo "【机构信息表】下载失败   </br>";
+			$flag_jg = 0;
+		}
+		if (ftp_fget ( $conn_id, $handle_kusd, $remote_file_kusd, FTP_ASCII, 0 )) {
+			echo "【客户属地表】成功下载   </br>";
+			$flag_kusd = 1;
+		} else {
+			echo "【客户属地表】下载失败   </br>";
+			$flag_kusd = 0;
+		}
+		
+		// 关闭ftp连接
+		ftp_close ( $conn_id );
+		fclose ( $handle_ywls );
+		fclose ( $handle_jg );
+		fclose ( $handle_kusd );
+		
+		//返回执行结果
+		if($flag_jg==1 && $flag_kusd==1 && $flag_ywls==1){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+	
+	
+	
+	/*
+	 * 导入数据文件到数据库
+	 * 参数：
+	 * $fiel文件名（包括路径）
+	 * $tablename数据表的名
+	 * $connect可用的数据库连接
+	 */
+	public function importdata($file, $tablename, $connect) {
+		// 打开文件
+		$handle = fopen ( $file, 'r' );
+	
+		// 选择要用的数据库
+		mysql_query ( 'use jrrc', $connect );
+		// 设定字符集
+		mysql_query ( 'set names utf8', $connect );
+	
+		// 清空数据库表
+		mysql_query ( 'truncate ' . $tablename, $connect );
+	
+		$string = "insert into jrrc_ywls values";
+		$val = '';
+		$recordcount = 0;
+		$improtcount=0;
+		if ($handle) {
+			while ( ($buffer = fgets ( $handle, 14096 )) !== false ) {
+	
+				if ($recordcount == 1000) {
+					$string = substr ( $string, 0, - 1 );
+					mysql_query ( $string, $connect );
+					$string = "insert into jrrc_ywls values";
+					$recordcount = 0;
+				}
+				// 转码
+				$buffer = mb_convert_encoding ( $buffer, "utf-8", "gbk, gb2312" );
+	
+				$buffer = str_replace ( '藎', '|', $buffer );
+				$record = explode ( "|", $buffer );
+				// echo count($record);
+				$val = $val . "(";
+				foreach ( $record as $value ) {
+					$val = $val . "'" . $value . "',";
+				}
+				$val = substr ( $val, 0, - 1 );
+				$val = $val . ")";
+				$string = $string . $val . ",";
+				$val = "";
+	
+				$recordcount ++;
+				// echo $recordcount."</br>";
+			}
+			$string = substr ( $string, 0, - 1 );
+			mysql_query ( $string, $connect );
+			if (! feof ( $handle )) {
+				echo "Error: unexpected fgets() fail\n";
+			}
+			fclose ( $handle );
+			$sql="select * from ".$tablename;
+
+			return mysql_num_rows(mysql_query($sql,$connect));
+		}
+
+	}
+	
+	
+	/*
+	 * 读取更新记录
+	 * 返回数据日期
+	 *
+	 */
+	public function getUpdateLog() {
+		$log = M ( 'updatelog' );
+		$result = $log->order ( 'id desc' )->limit ( 1 )->select ();
+		return $result [0] ['data_date'];
+	}
+	
+	
+	/*
+	 * 
+	 * 
+	 * ftp获取数据流水文件的日期 
+	 * 
+	 *  
+	 */
+	function getftpfiledate() {
+		//融和ftp登录信息
+		$ftp_server='141.0.189.69';
+		$ftp_user_name='gj';
+		$ftp_user_password='gj';
+	
+		// 连接
+		$conn_id = ftp_connect ( $ftp_server );
+		// 登录
+		$login_result = ftp_login ( $conn_id, $ftp_user_name, $ftp_user_password );
+	
+		// 获取目录下所有的文件夹
+		$dir = ftp_nlist ( $conn_id, "/" );
+	
+		// path to remote file
+		// 远程和本地文件夹定义
+		$remote_directory=$dir[count($dir)-1]."/";
+		return $remote_directory;
+	}
+	
+	
+	
+	
+	/*
+	 * 
+	 * 比较ftp数据文件日期与数据库更新记录
+	 * 
+	 *   
+	 */
+	public function comparedate(){
+		$logdate=$this->getUpdateLog();
+		$ftpfiledate=str_replace("/",'',$this->getftpfiledate());
+
+		echo "logdate:".$logdate."</br>";
+		echo "ftpfiledate:".$ftpfiledate."</br>";
+
+		if($ftpfiledate>=$logdate){
+			return $needupdate=true;
+		}else{
+			return $needupdate=false;
+		}
+	}
+	
+}

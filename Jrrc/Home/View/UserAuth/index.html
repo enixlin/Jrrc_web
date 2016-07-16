@@ -1,0 +1,26 @@
+
+<table width='100%'>
+<td width='30%'>
+<input type="button" value='添加用户'  id='btn_adduser'/></br></br>
+</td>
+<td width='40%'>
+<input type="button" value='修改用户信息' id='btn_modifyuser'/></br></br>
+</td>
+<td width='30%'>
+<input type="button" value='修改用户组权限'  id='btn_modifygroup'/></br></br>
+</td>
+</table>
+
+<script>
+$(function(){
+	$("#btn_adduser").bind('click',function(){
+		$.get('/Jrrc_web/Home/UserAuth/addUser',function(message){
+			$("#right").html('');
+			$("#right").html(message);
+			
+		})
+	});
+});
+
+
+</script>

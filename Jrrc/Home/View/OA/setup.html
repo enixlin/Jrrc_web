@@ -1,0 +1,28 @@
+<form action="" id='fm_userinfo'>
+
+设定统一登录平台用户信息：</br></br>
+户名：<input type="text"  name='oaname' /></br></br>
+密码：<input type="text"  name='oapassword' /></br></br>
+<input type="reset"  value='重置'  />
+<input type="button"  value='保存'  id='btn_submit'/>
+
+</form>
+
+<script>
+		$(function(){
+			$("#btn_submit").bind('click',function(){
+				var data=$("#fm_userinfo").serialize();
+				$.post('/Jrrc_web/Home/OA/updatesetup',data,function(msg){
+					if(msg==1){
+						alert("更新成功");
+						window.location.href='http://141.1.51.106/jrrc_web/home/login/logout';
+					}
+					else{
+						alert("更新失败");
+					}
+				});
+			});
+			
+		});
+
+</script>

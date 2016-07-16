@@ -1,0 +1,52 @@
+<div>
+	<form id="form_add_task">
+		任务指标名称：<input type="text" id="zb_name" name="zb_name" /> <br/>
+		任务指标编号：<input type="text" id="zb_type" name="zb_type" /> 		
+		<input type="button" value="保存" id="save_add" />
+	</form>
+</div>
+<br />
+<div id="div_task_list"></div>
+
+<script>
+	$(function() {
+
+		refresh();
+
+		function refresh() {
+			$.get('/Jrrc_web/Home/Rate/show_task_type_list', function(msg) {
+				$("#div_task_list").html(msg);
+			});
+		}
+
+		$("#task_list").css({
+			"width" : "100%",
+			"border" : "0px solid gray",
+			"cellspacing" : "0",
+			"cellpadding" : "0",
+			'border-collapse' : 'collapse'
+		});
+		$("#task_list td").css({
+			"border" : "1px solid gray",
+			"cellspacing" : "0",
+			"cellpadding" : "0",
+			'border-collapse' : 'collapse'
+		});
+
+		$("#save_add").bind('click', function() {
+			var data = $("#form_add_task").serialize();
+			//alert(data);
+			$.post('/Jrrc_web/Home/Rate/add_task', data, function(msg) {
+				
+				if (msg == '1') {
+					alert("添加任务种类成功！");
+					$.get('/Jrrc_web/Home/Rate/task_setup',function(msg){
+						$("#right").html(msg);
+					});
+				}
+			});
+		});
+		
+		
+	});
+</script>

@@ -1,0 +1,15 @@
+<?php
+
+namespace Home\Controller;
+
+use Common\Controller\AuthController;
+
+class OAController extends AuthController {
+		public function index(){
+		$this->display('index');
+		}
+
+		public function swift(){
+		$this->display('swift');
+		}
+}

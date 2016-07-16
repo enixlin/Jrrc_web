@@ -1,0 +1,101 @@
+
+
+<!--用户列表  -->
+<div id="div_user_list" align="center">
+	<table  id="table_user_list" class='table'>
+		<tr style="color:blue;align:center;width:100%" >
+			<td class="align_center" colspan='6'>用户列表 </td>
+		</tr>
+
+		<tr >
+		<td class='tableHeader align_center' >Id</td>
+		<td class='tableHeader align_center' >用户名</td>
+		<td class='tableHeader align_center' >状态（1为正常，0为停用）</td>
+		<td class='tableHeader align_center'  colspan='3'>操作</td>
+		</tr>
+		
+		<volist name='user' id='vo'>
+		<tr >
+		<td class='tableTd align_center'>{$vo.id}</td>
+		<td class='tableTd align_center'>{$vo.name}</td>
+		<td class='tableTd align_center'>{$vo.status}</td>
+		<td class='tableTd align_center finger' id='{$vo.id}'>删除</td>
+		<td class='tableTd align_center finger' id='{$vo.id}'>停用</td>
+		<td class='tableTd align_center finger' id='{$vo.id}'>启用</td>
+		</tr>
+		</volist>
+		
+	</table>
+
+</div>
+
+
+
+
+
+<script>
+$(function(){
+	$("#table_user_list td").bind('mousemove', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "#cbadef";
+	});
+	$("#table_user_list td").bind('mouseout', function(evgl) {
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		evg.parentNode.style.background = "white";
+	});
+	
+	$("#table_user_list td").bind('click', function(evgl) {
+		evgl.stopPropagation();
+		var evg = evgl.srcElement ? evgl.srcElement : evgl.target;
+		var id=evg.id;
+		var target=evg.innerHTML;
+		var url="";
+		var send=0;
+		
+		if(id==""){
+			return;
+		}
+		
+		if(target=="删除"){
+			url="/Jrrc_web/Home/UserAuth/deleteUser/id/"+id;
+			send=3;
+		}
+		if(target=="停用"){
+			url="/Jrrc_web/Home/UserAuth/handlesetUserStatus/id/"+id+"/status/0";
+			send=1;
+		}
+		if(target=="启用"){
+			url="/Jrrc_web/Home/UserAuth/handlesetUserStatus/id/"+id+"/status/1";
+			send=1;
+		}
+	
+		if(send!=0){
+			if(send==3){
+				if(confirm('确定要删除本条记录？？')){		
+					$.get(url,function(msg1){
+						$.get('/Jrrc_web/Home/UserAuth/showUserList',function(msg){
+							$("#div_user_list").html(msg);
+						});
+					});
+				}else{
+					return;
+				}
+					
+			}
+		
+		$.get(url,function(msg1){
+			$.get('/Jrrc_web/Home/UserAuth/showUserList',function(msg){
+				$("#div_user_list").html(msg);
+			});
+		});
+		}
+	});
+	
+	
+
+	
+});
+</script>
+
+
+

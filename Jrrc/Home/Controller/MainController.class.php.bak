@@ -1,0 +1,65 @@
+<?php
+
+namespace Home\Controller;
+
+use Think\Controller;
+
+class MainController extends Controller {
+	public function Index() {
+		echo session ( 'name' );
+		// 检查SESSION,如果没有信息就跳转登录页面
+		if (session ( 'name' ) == null) {
+			$this->error ( '你还没有登录', "/Jrrc_web/Home/Login/" );
+		} else {
+			// session信息存在，进入用户主功能页面
+			$this->success ( '正在转至主页面', '/jrrc_web/Home/Main/initialize' );
+		}
+	}
+	public function initialize() {
+		// 初始化用户菜单
+		// 根据不同的用户权限组，加载不同的功能菜单
+		$User = D ( 'User' );
+		$data ['id'] = session ( 'uid' );
+		$Menu = $User->relation ( 'auth_group' )->where ( $data )->select ();
+		$AuthRule = M ( 'auth_rule' );
+		$map ['id'] = array (
+				'IN',
+				$Menu [0] ['auth_group'] [0] ['rules'] 
+		);
+		$menuList = $AuthRule->where ( $map )->order ( 'id asc' )->select ();
+		
+		// 根据将二级功能插入到一个数组中
+		$array1 = array (); // 一级功能
+		$array2 = array (); // 二级功能
+		$arrayall = array (); // 全部的功能
+		                      
+		// 根level字段将查询出来的行存入一级和二级数组
+		foreach ( $menuList as $key => $v ) {
+			// echo $key."---value--:".$v."</br>";
+			if ($v ['level'] == '1') {
+				array_push ( $array1, $v );
+			}
+			if ($v ['level'] == '2') {
+				array_push ( $array2, $v );
+			}
+		}
+		// 将一级和二级的功能合并成一个数组
+		foreach ( $array1 as $v ) {
+			$arraycombine = array ();
+			foreach ( $array2 as $va ) {
+				if ($v ['pid'] == $va ['pid']) {
+					array_push ( $arraycombine, $va );
+				}
+			}
+			array_push ( $v, $arraycombine );
+			array_push ( $arrayall, $v );
+		}
+		$menuList = $arrayall;
+		
+		$name = session ( 'name' );
+		$this->assign ( 'name', $name );
+		$this->assign ( 'menu', $menuList );
+		
+		$this->display ( 'main' );
+	}
+}

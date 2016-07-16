@@ -1,0 +1,164 @@
+<div id="content">
+    <div id="menu">
+        <div id='menudiv'>
+            <div id='functionMenu'>
+                <h3>通信录</h3>
+                <div id='phonebook' >
+                       <img src="/jrrc/jrrc/public/res/phonebook-s.png" alt="">
+                       <p><a href="#">融和银行通信录</a></p>
+                       <p><a href="#">国际业务部通信录</a></p>
+                </div>
+
+                <h3>邮件系统</h3>
+                <div id='bookmark'>
+                    <img src="/jrrc/jrrc/public/res/mail-s1.png" alt="">
+                    <span>OA邮箱和互联网邮箱一起使用</span>
+                </div>
+
+                <h3 id='bm'>记事台账</h3>
+                <div id='bookmark'>
+                    <img src="/jrrc/jrrc/public/res/bookmark-s.png" alt="">
+                    <p><a href="#" id='a_tf'>贸易融资台账</a></p>
+                    <p><a href="">结算量台账</a></p>
+                    <p><a href="">日程记事</a></p>
+                    
+                </div>
+
+                <h3>业绩报表</h3>
+                <div id='chart'>
+                    <img src="/jrrc/jrrc/public/res/chart-s.png" alt="">
+                    <span>业绩报表</span>
+                </div>
+
+                <h3>政策与文件</h3>
+                <div id='policy'>
+                    <img src="/jrrc/jrrc/public/res/policy-s.png" alt="">
+                    <span>业绩报表政策与文件</span>
+                </div>
+
+                <h3>海关数据</h3>
+                <div id='customer'>
+                    <img src="/jrrc/jrrc/public/res/customer-s1.png" alt="海关数据">
+                    <span>海关数据</span>
+                </div>
+            </div>
+       </div>
+    </div>
+
+
+    <div id="bar"  title='点击打开或隐藏功能菜单'>
+        <img id='img1' src="/jrrc/jrrc/public/res/ARW06LT.ICO"  style='width:12px;margin:250px 0px 0px 0px' title='点击打开或隐藏功能菜单'>
+    </div>
+
+    <div id="workbench">
+    <span>今天到期贷款：</span>
+    <ul> 
+    <volist name="relust" id="vo">
+    <li>
+    {$vo.credit_code}|| {$vo.cname}
+    </li>
+    </volist>
+    </ul>
+    </div>
+</div>
+
+
+<style>
+    #content    {
+        width: 1202px;
+        height: 550px;
+
+        overflow: auto;
+        padding:0px;
+    }
+
+
+    #menu   {
+        width: 16%;
+        height:  540px;
+        float: left;
+        background: white;
+        margin: 0px;
+    }
+   
+            a:link    { color: blue;}    /* unvisited links */  
+            a:visited { color: gray }   /* visited links   */  
+            a:hover   { color: red } /* user hovers     */  
+            a:active  { color: green }   /* active links    */  
+            a{text-decoration: none; }
+
+        }
+
+    #menudiv    {
+        margin: 0px;
+        float: left;
+        height: 100%;
+    }
+
+
+    #bar    {
+        width: 1%;
+        height: 100%;
+        float: left;
+        background: orange;
+        
+
+    }
+
+    #workbench  {
+        width:85.8%;
+        height: 550px;
+        float: left;
+        background: white;
+        overflow: auto;
+       
+    }
+
+</style>
+
+
+
+<script>
+    $(function(){
+        $("#functionMenu").accordion({ animate: 100 ,active:2});
+        
+        var framestate=0;
+        $("#bar").click(function(event) {
+            $("#menu").fadeToggle(500);
+            if (framestate==0) {
+                $("#workbench").css('width', '99%');
+                $("#img1").attr('src', '/jrrc/jrrc/public/res/ARW06RT.ICO');
+                framestate=1;
+               
+            }else{
+                $("#workbench").css('width', '80%');
+                $("#img1").attr('src', '/jrrc/jrrc/public/res/ARW06LT.ICO');
+
+                framestate=0;
+            }
+            
+        });
+
+
+
+//         显示和隐藏功能菜单
+        $("#menudiv>input").click(function(){
+            $("#functionMenu").fadeToggle(300);
+            if ($("#menudiv>input").val()=="隐藏功能菜单") {              
+                $("#menudiv>input").attr('value',"显示功能菜单");
+                
+            }else  $("#menudiv>input").attr('value',"隐藏功能菜单");
+            
+        });
+        
+        //转到贸易融资台账   
+        $("#a_tf").click(function(event){
+         $.get("/jrrc/home/tf/", { name: "John", time: "2pm" },
+            function(data){
+            $("#workbench").html(data);
+             });
+  
+        });
+         
+    });
+</script>

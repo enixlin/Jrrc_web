@@ -1,0 +1,107 @@
+<div id='search_head'>
+	<form action="#" id='search_form'>
+		&nbsp;&nbsp;&nbsp;&nbsp; 
+		文件名称：<input type="text" name="d_title" id="d_title"/>
+		文件内容：<input type="text" name='d_content' id="d_content"/> 
+		文件编号：<input type="text" name='d_issue_num' id="d_issue_num"/> 
+		<input type="button" value='查询' id='btn_search' /> &nbsp;&nbsp;&nbsp;数据更新至：2015年3月</br>
+	</form>
+</div>
+<hr>
+	<div id='div_content' align='center'></br>
+	<img height='400px'  src="/jrrc_web/public/res/bg/logo.png" alt="" />
+	</div>
+<script>
+
+//ajax提交查询 
+function search(id){
+	var id = id;
+	if(id==null){
+		id=1;
+	}
+	if($("#d_title").val()!="" || $("#d_content").val()!="" || $("#d_issue_num").val()!="" ){
+	}else{
+		alert("没有设定查询条件");
+		return;
+	}
+	var data=$('#search_form').serialize();
+	data=data+"&p="+id;
+	$.get('/Jrrc_web/Home/Policy/search',data,function(msg){	
+		
+		$("#div_content").html(msg);
+		$("#article_list").css({"border":"0px solid gray","cellspacing":"0px","cellpadding":"0px",'border-collapse':'collapse'});
+		$("#article_list td").css({"border":"1px solid gray"});
+		
+	////当鼠标停在行上高亮
+		$("#article_list td").bind('mousemove',function(evgl){
+			var evg=evgl.srcElement?evgl.sElement:evgl.target; 
+			evg.parentNode.style.background="#cbadef";
+		});
+		//当鼠标离开就变来颜色
+		$("#article_list td").bind('mouseout',function(evgl){
+			var evg=evgl.srcElement?evgl.srcElement:evgl.target; 
+			evg.parentNode.style.background="white";
+		});
+		
+		//当鼠标停在行上高亮
+		$("#article_list a").bind('mousemove',function(evgl){
+			var evg=evgl.srcElement?evgl.sElement:evgl.target; 
+			evg.parentNode.parentNode.style.background="#cbadef";
+		});
+		//当鼠标离开就变来颜色
+		$("#article_list a").bind('mouseout',function(evgl){
+			var evg=evgl.srcElement?evgl.srcElement:evgl.target; 
+			evg.parentNode.parentNode.style.background="white";
+		});
+		
+		//文件列表里的超链接格式
+		$("#div_content").css({"font-size": "15px"});
+		$(" table a:link").css({"text-decoration": "none", "color": "black","margin":"3px"});
+		
+		
+	});
+}
+
+	$(function() {
+		
+		//格式化查询条件
+		$("#search_head input").css({
+			'border' : "2px solid #abcdef",
+			'height':'25px',
+			'verticalAlign':'middle'
+		});
+	
+		$("#btn_search").button();
+		$("#btn_search").css({'height':'30px'});
+
+		$("#div_content").css({
+			'width' : '98%',
+			'height' : '430px',
+			'border' : "0px solid gray",
+			'overflow' : 'auto',
+			'margin':'5px 0px 0px 1px'
+		});
+		
+		
+		
+
+		//处理查询按键单击事件
+		$("#btn_search").bind('click',function(){
+			search();
+		});	
+		
+		
+		
+
+		
+	});
+</script>
+
+<style>
+.theadl{ background-image:url('/Jrrc_web/Public/res/tab.gif');width:10%}
+.theadm{ background-image:url('/Jrrc_web/Public/res/tab.gif');width:15%}
+.theadb{ background-image:url('/Jrrc_web/Public/res/tab.gif');width:75%}
+.a_charset{charset="utf-8"}
+
+
+</style>

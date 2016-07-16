@@ -1,0 +1,35 @@
+
+<form action="">
+户名：<input type="text" name ='name' /></br>
+密码：<input type="text" name ='password' /></br>
+密码确认：<input type="text" name ='comfirm_password' /></br>
+用户组：<select name="title" id="type">
+<volist name='type' id='vo'>
+<option value={$vo.id}> {$vo.title}</option>
+</volist>
+</select></br>
+启用：
+<input type="radio" name='status' checked='checked'  value='1'/>是
+<input type="radio" name='status' value='0'/>否
+</br>
+<input type="button" value='保存用户'  id='btn_submit'/>
+</form>
+
+<script>
+$("#btn_submit").bind('click',function(){
+	var data=$("form").serialize() 
+	$.post('/Jrrc_web/Home/UserAuth/addUserHandle',data,function(msg){
+		if(msg=="ok"){
+			if(confirm("添加用户成功，是否继续添加？")){
+			return;
+			}else{
+				window.location.href="/Jrrc_web/Home/";
+			}
+		}else{
+		alert('添加用户失败');
+		}
+	});
+});
+
+</script>
+

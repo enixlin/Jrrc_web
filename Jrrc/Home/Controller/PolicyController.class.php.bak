@@ -1,0 +1,50 @@
+<?php
+
+/*
+ * 政策文件查询类
+ */
+namespace Home\Controller;
+
+use Common\Controller\AuthController;
+
+class PolicyController extends AuthController {
+	// 显示查询页面
+	public function index() {
+		$this->display ( 'search' );
+	}
+	// 接收查询参数
+	public function getSearchArg() {
+		$data = $_POST;
+		return $data;
+	}
+	// 公文查询
+	public function search() {
+		$this->searchhandle ( $this->getSearchArg () );
+	}
+	
+	// 处理公文查询
+	public function searchhandle($data) {
+		$Policy = M ( 'Document' );
+		$map ['d_title'] = array (
+				'like',
+				"%" . $data ['d_title'] . "%" 
+		);
+		 $map['d_issue_num']=array('like',"%".$data['d_issue_num']."%");
+		 $map['d_content']=array('like',"%".$data['d_content']."%");
+		$result = $Policy->where ( $map )->order('d_issue_date desc')->field ( "d_title,d_issue_num,d_issue_date" )->select ();
+		echo json_encode ( $result );
+	}
+	
+	// 按公文标题查询
+	public function findbytitle($title) {
+		$Policy = M ( 'Document' );
+		$map ['d_title'] = array('like',"%".$title."%");
+		$result = $Policy->where ( $map )->field ( "d_content" )->select ();
+		//将html文体中的非utf8 charset编码转为utf8
+		//$str=str_replace('x-mac-chinesesimp','utf8',$result [0] ['d_content']);
+		//$str=str_replace('gb2312','utf8',$str);
+		echo $str;
+		//
+		
+	}
+}

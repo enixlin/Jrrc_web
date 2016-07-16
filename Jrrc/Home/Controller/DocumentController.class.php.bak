@@ -1,0 +1,17 @@
+<?php
+
+namespace Home\Controller;
+
+// use Think\Controller;
+use Common\Controller\AuthController;
+
+class DocumentController extends AuthController {
+	public function index() {
+		$doc = M ( 'document' );
+		dump ( $doc->limit ( 1100 )->field ( 'd_title' )->select () );
+	}
+	
+	public function show(){
+		echo "show document";
+	}
+}

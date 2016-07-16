@@ -1,0 +1,49 @@
+<form action="" ，method='post'>
+	<table>
+		<tr>
+			<td>标题 </td>
+			<td><input type="text" name='title' value={$result[0].title} /></td>
+		</tr>
+		<tr>
+			<td>日期</td>
+			<td><input type="text" id='tb_date' name='date' value={$result[0].date}  /></td>
+		</tr>
+		<tr>
+			<td>是否公开</td>
+			<td>是<input type="radio" name='is_public' value='0'
+				checked='checked' />否<input type="radio" name="is_public" value='1' /></td>
+		</tr>
+		<tr>
+			<td>重要</td>
+			<td>是<input type="radio" name='level' value='0'
+				checked='checked' />否<input type="radio" name='level' value='1' /></td>
+		</tr>
+		<tr>
+			<td>记事内容</td>
+			<td><textarea rows='10' cols='30' name='content'  text={$result[0].content}  /></td>
+		</tr>
+		<tr>
+			<td align='center' colspan='2'><input type="button" value='保存修改'
+				id='btn_modify' /></td>
+		</tr>
+	</table>
+</form>
+
+
+
+<script>
+	$(function() {
+		showAddBox();
+
+		//显示\格式化记事输入框
+		function showAddBox() {
+			//$("#tb_date").datepicker();
+			$("#div_modify_schedule").dialog({
+				"width" : '500px',
+				"title" : '修改记事'
+			});
+
+		};
+	
+	});
+</script>

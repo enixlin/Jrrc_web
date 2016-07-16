@@ -1,0 +1,93 @@
+
+    <div id="loginForm">
+        <form action="/jrrc/home/login/" method='post' >
+            <br/>
+            <p><b>名 称：</b><input type="text" id='username' /></p>
+            <p><b>密 码：</b><input type="password" id='password' /></p>
+            <p>
+                <input type="button" value="修改密码" id='re'>
+                &nbsp;
+                <input type="button" value="登  录" id='en'>
+            </p>
+        </form>
+        <hr style="color:orange"/>
+        <p>请在上面的输入框中输入用户名和密码，登录后可使用 <b>更多</b> 等功能</p>
+        <p style="color:orange">***** 请注意 ****</p>
+    </div>
+    
+<style>
+#loginForm{
+    background-color: white;
+    filter=opacity:0.3;
+    opacity: 30;
+    text-align: center;
+    width: 300px;
+    height: 350px;
+    border: 3px double orange;
+    float: right;
+    margin: 100px 20px auto;
+    position:relative;
+    z-index: 2;
+
+}
+#loginForm p{
+color: gray;
+font-family: 微软雅黑;
+}
+</style>
+<script>
+    $(function(){
+        $("#loginForm").draggable();
+        $('#loginForm>form>p>input').button();
+        // $(':text').button();
+        $("#en").click(function(){
+            //clearInterval(timer1);
+
+            // 检测用户有没有填写好用户名和密码
+            if ($("#username").val()=="" ) {
+                alert('用户名没有填写',true);
+                return;
+            };
+            if ( $("#password").val()=="" ) {        
+                alert('密码没有填写',true);
+                return;
+            };
+            
+            
+
+            // ajax方式发送请求
+            jQuery.ajax({
+              url: '/jrrc/home/login/index/',
+              type: 'POST',
+              dataType: 'html',
+              contentType: "application/x-www-form-urlencoded",
+              data: {username: $("#username").val(),password:$("#password").val()},
+              complete: function(xhr, textStatus) {
+                if (xhr.responseText=='ok') {
+
+                    window.location.href="/jrrc/home/main/";
+
+                } else alert('用户信息有误,请核对输入的【用户名】和【密码】！');
+
+                //called when complete
+              },
+              success: function(data, textStatus, xhr) {
+                //alert('ok success'+ ' '+xhr.responseText);
+                //called when successful
+              },
+              error: function(xhr, textStatus, errorThrown) {
+             // alert('ok error'+ ' '+xhr.responseText);
+                //called when there is an error
+              }
+            });
+  
+        });
+
+        var timer1=null;  //创建一个新的对象
+        timer1=setInterval(rollText,800);//设定时间间隔调用对象的方法
+
+        function rollText(){      
+            $("#loginForm>p:last").toggle();
+        }
+    });
+</script>

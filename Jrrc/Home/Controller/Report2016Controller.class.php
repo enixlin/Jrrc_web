@@ -9,7 +9,7 @@ use Think\Controller;
 use Think\Model;
 use Org\Util\Date;
 use Org\Util\AjaxPage;
-
+//m c 1
 require ("../Jrrc_web/Public/Classes/PHPExcel.php");
 // 导入绘图类文件
 require_once ("../jrrc_web/public/jpgraph/jpgraph/jpgraph.php");

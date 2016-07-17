@@ -575,11 +575,9 @@ class Report2016Controller extends Controller {
 					$result [$key] ['tf_times_compare'] = $rc ['tf_times'];
 					$result [$key] ['tf_jiner_compare'] = $rc ['tf_jiner'];
 					
-				
-					
+
 					$ff = 1;
 				}
-	
 			}
 			
 			if ($ff == 0) {
@@ -589,8 +587,6 @@ class Report2016Controller extends Controller {
 				$result [$key] ['js_jiner_compare'] = 0;
 				$result [$key] ['tf_times_compare'] = 0;
 				$result [$key] ['tf_jiner_compare'] = 0;
-				
-			
 			}
 			
 			$js_times_total = $js_times_total + $r ['js_times'];
@@ -599,8 +595,6 @@ class Report2016Controller extends Controller {
 			$jsh_jiner_total = $jsh_jiner_total + $r ['jsh_jiner'];
 			$tf_times_total = $tf_times_total + $r ['tf_times'];
 			$tf_jiner_total = $tf_jiner_total + $r ['tf_jiner'];
-			
-			
 		}
 		
 		foreach ( $result_compare as $key => $rc ) {
@@ -631,8 +625,7 @@ class Report2016Controller extends Controller {
 						"jsh_jiner" => 0,
 						"jsh_times" => 0,
 						"tf_jiner" => 0,
-						"tf_times" => 0,
-					
+						"tf_times" => 0 
 				)
 				;
 				if ($sub != null and $flag == 0) {
@@ -641,13 +634,11 @@ class Report2016Controller extends Controller {
 			}
 		}
 		
-		foreach($result as $key=> $r){
-			$result[$key]['js_jiner_tongbi']=$r["js_jiner"]-$r["js_jiner_compare"];
-			$result[$key]['jsh_jiner_tongbi']=$r["jsh_jiner"]-$r["jsh_jiner_compare"];
-			$result[$key]['tf_jiner_tongbi']=$r["tf_jiner"]-$r["tf_jiner_compare"];
+		foreach ( $result as $key => $r ) {
+			$result [$key] ['js_jiner_tongbi'] = $r ["js_jiner"] - $r ["js_jiner_compare"];
+			$result [$key] ['jsh_jiner_tongbi'] = $r ["jsh_jiner"] - $r ["jsh_jiner_compare"];
+			$result [$key] ['tf_jiner_tongbi'] = $r ["tf_jiner"] - $r ["tf_jiner_compare"];
 		}
-		
-	
 		
 		$total = array (
 				'js_times_total' => $js_times_total,
@@ -658,45 +649,39 @@ class Report2016Controller extends Controller {
 				'tf_jiner_total' => $tf_jiner_total 
 		);
 		
-		//根据排序参数进行排序
+		// 根据排序参数进行排序
 		// 取得列的列表
-		foreach ($result as $key => $row)
-		{
-			$js_jiner[$key]  = $row['js_jiner'];
-			$js_jiner_tongbi[$key]  = $row['js_jiner_tongbi'];
+		foreach ( $result as $key => $row ) {
+			$js_jiner [$key] = $row ['js_jiner'];
+			$js_jiner_tongbi [$key] = $row ['js_jiner_tongbi'];
 			
-			$jsh_jiner[$key]  = $row['jsh_jiner'];
-			$jsh_jiner_tongbi[$key]  = $row['jsh_jiner_tongbi'];
+			$jsh_jiner [$key] = $row ['jsh_jiner'];
+			$jsh_jiner_tongbi [$key] = $row ['jsh_jiner_tongbi'];
 			
-			$tf_jiner[$key]  = $row['tf_jiner'];
-			$tf_jiner_tongbi[$key]  = $row['tf_jiner_tongbi'];
-			
-		}
-			
-		if(I("post.sorttype")==1){
-			
-		}
-		if(I("post.sorttype")==2){
-			array_multisort($js_jiner, SORT_DESC,$result);
-		}
-		if(I("post.sorttype")==3){
-			array_multisort($js_jiner_tongbi, SORT_DESC,$result);
-		}
-		if(I("post.sorttype")==4){
-			array_multisort($jsh_jiner, SORT_DESC,$result);
-		}
-		if(I("post.sorttype")==5){
-			array_multisort($jsh_jiner_tongbi, SORT_DESC,$result);
-		}
-		if(I("post.sorttype")==6){
-			array_multisort($tf_jiner, SORT_DESC,$result);
-		}
-		if(I("post.sorttype")==7){
-			array_multisort($tf_jiner_tongbi, SORT_DESC,$result);
+			$tf_jiner [$key] = $row ['tf_jiner'];
+			$tf_jiner_tongbi [$key] = $row ['tf_jiner_tongbi'];
 		}
 		
-		
-		
+		if (I ( "post.sorttype" ) == 1) {
+		}
+		if (I ( "post.sorttype" ) == 2) {
+			array_multisort ( $js_jiner, SORT_DESC, $result );
+		}
+		if (I ( "post.sorttype" ) == 3) {
+			array_multisort ( $js_jiner_tongbi, SORT_DESC, $result );
+		}
+		if (I ( "post.sorttype" ) == 4) {
+			array_multisort ( $jsh_jiner, SORT_DESC, $result );
+		}
+		if (I ( "post.sorttype" ) == 5) {
+			array_multisort ( $jsh_jiner_tongbi, SORT_DESC, $result );
+		}
+		if (I ( "post.sorttype" ) == 6) {
+			array_multisort ( $tf_jiner, SORT_DESC, $result );
+		}
+		if (I ( "post.sorttype" ) == 7) {
+			array_multisort ( $tf_jiner_tongbi, SORT_DESC, $result );
+		}
 		
 		$this->assign ( "client_yw", $result );
 		$this->assign ( "total", $total );
@@ -2068,4 +2053,77 @@ class Report2016Controller extends Controller {
 		$this->assign ( 'result', $result );
 		$this->display ( 'show_Client_first_date' );
 	}
+	
+	/**
+	 * 取得客户的业务流水记录
+	 * 
+	 * @param unknown $ywls_type        业务流水类型 1：结算量 2.结售汇量 3.贸易融资	
+	 * @param unknown $client_id        客户号	
+	 * @param unknown $start        	开始日期
+	 * @param unknown $end        		结束日期
+	 */
+	public function get_client_ywls($ywls_type, $client_id, $start, $end) {
+		$model = M ( "ywls" );
+		$condition ['type'] = $ywls_type;
+		$condition ['custno'] = $client_id;
+		$condition ['yw_date'] = array (
+				array (
+						'egt',
+						$start 
+				),
+				array (
+						'elt',
+						$end 
+				) 
+		);
+		$result=$model->where($condition)->order("yw_date desc")->select();
+		return $result;
+	}
+	
+	/**
+	 * 取得机构的业务流水记录
+	 *
+	 * @param unknown $ywls_type       业务流水类型 1：结算量 2.结售汇量 3.贸易融资
+	 * @param unknown $unit_id        	机构号
+	 * @param unknown $start        	开始日期
+	 * @param unknown $end        		结束日期
+	 */
+	public function get_unit_ywls($ywls_type, $client_id, $start, $end) {
+		$model = M ( "ywls" );
+		$condition ['type'] = $ywls_type;
+		$condition ['upbranch'] = $unit_id;
+		$condition ['yw_date'] = array (
+				array (
+						'egt',
+						$start
+				),
+				array (
+						'elt',
+						$end
+				)
+		);
+		$result=$model->where($condition)->select();
+		return $result;
+	}
+	
+	/**
+	 * 显示业务流水
+	 * @param unknown $result
+	 */
+	public function show_ywls($result){
+		$this->assign('ywls',$result);
+		$this->display("show_ywls");
+	}
+	
+	public function show_client_ywls($ywls_type, $client_id, $start, $end){
+		$reuslt=$this->get_client_ywls($ywls_type, $client_id, $start, $end);
+		$this->show_ywls($reuslt);
+	}
+	
+	
+	public function  tongqi($date){
+		return "" . (substr ( $date, 0, 4 ) - 1) . substr ( $date, 4, 4 );
+	}
+	
+
 }
